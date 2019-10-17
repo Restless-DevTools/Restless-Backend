@@ -1,0 +1,44 @@
+{
+  "name": "restless-backend",
+  "version": "1.0.0",
+  "description": "A simple app for your team to share your API requests and snippets.",
+  "main": "index.js",
+  "repository": "git@github.com:Felipedelima123/Restless-Backend.git",
+  "author": "Francisco Felipe <francisco@attivilog.com.br>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon -w src --exec \"babel-node src\"",
+    "build": "babel src -s -D -d dist",
+    "production": "pm2 start dist -i 0",
+    "prestart": "npm run -s build",
+    "lint": "eslint src",
+    "test": "NODE_ENV=test jest --testURL='http://localhost/'"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "bluebird": "^3.7.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jest": "^24.9.0",
+    "joi": "^14.3.1",
+    "morgan": "^1.9.1",
+    "pg": "^7.12.1",
+    "sequelize": "^5.19.7"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/plugin-transform-spread": "^7.6.2",
+    "@babel/preset-env": "^7.6.3",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-mocha": "^6.2.0",
+    "nodemon": "^1.19.4"
+  }
+}

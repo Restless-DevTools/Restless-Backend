@@ -1,35 +1,35 @@
 import models from '../models';
 
-export default class GroupRepository {
+export default class TeamRepository {
   constructor() {
-    this.db = models.Group;
+    this.db = models.Team;
     this.sequelize = models.sequelize;
     this.Op = models.Sequelize.Op;
   }
 
-  getAllGroups() {
+  getAllTeams() {
     return this.db.findAll();
   }
 
-  async create(group) {
-    const createdGroup = await this.db.create({
-      name: group.name,
+  async create(team) {
+    const createdTeam = await this.db.create({
+      name: team.name,
     });
-    return createdGroup;
+    return createdTeam;
   }
 
-  async edit(paramsId, group) {
+  async edit(paramsId, team) {
     await this.db.update({
-      name: group.name,
+      name: team.name,
     }, {
       where: {
         id: paramsId,
       },
     });
-    return this.getGroup(paramsId);
+    return this.getTeam(paramsId);
   }
 
-  getGroup(paramsId) {
+  getTeam(paramsId) {
     return this.db.findOne({
       where: {
         id: paramsId,

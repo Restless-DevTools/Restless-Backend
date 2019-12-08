@@ -50,6 +50,7 @@ Object.values(models)
 const db = {
   ...models,
   sequelize,
+  Sequelize,
 };
 
 export default db;

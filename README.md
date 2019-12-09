@@ -49,3 +49,9 @@ yarn dev
 
 ## Request Flux
 Route -> Middleware -> Controller -> Service -> Repository -> Database
+
+## TODO
+[] - Add the authentication middleware, after the implementation;
+[] - Add tests and mantain the coverage on 90%;
+[] - Configure the envs for the inteire project and make possible the dialect be chosen;
+[] - Improve this docs, with motivation, vision and some other information about this project;

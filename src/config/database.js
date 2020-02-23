@@ -3,13 +3,13 @@ require('dotenv').config({
 });
 
 module.exports = {
-  host: process.env.DB_HOST,
-  username: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-  dialect: process.env.DB_DIALECT,
-  storage: './tests/database.sqlite',
-  operatorsAliases: false,
+  host: process.env.DATABASE_HOST,
+  username: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME,
+  dialect: process.env.DATABASE_DIALECT,
+  port: process.env.DATABASE_PORT,
+  storage: './__tests__/database.sqlite',
   logging: false,
   define: {
     timestamps: true,

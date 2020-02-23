@@ -12,13 +12,25 @@ import RequestQuery from './RequestQuery';
 import Response from './Response';
 import Snippet from './Snippet';
 
-const databaseUrl = process.env.DB_RESTLESS || 'postgres://postgres:postgres!@localhost:5432/restless';
+// configs
+import {
+  host, username, password, database, dialect, port, storage,
+} from '../config/database';
+
+const databaseUrl = `${dialect}://${username}:${password}@${host}:${port}/${database}`;
 
 const sequelize = new Sequelize(databaseUrl, {
-  dialect: 'postgres',
+  dialect,
   underscored: true,
   freezeTableName: true,
-  logging: process.env.NODE_ENV !== 'test',
+  logging: process.env.NODE_ENV !== 'test' && process.env.DATABASE_DEBUG !== 'false',
+  storage,
+  pool: {
+    max: 7,
+    min: 2,
+    acquire: 30000,
+    idle: 10000,
+  },
 });
 
 sequelize

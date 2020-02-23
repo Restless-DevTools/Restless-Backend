@@ -45,7 +45,7 @@ yarn dev
 | models      | Represents data                                                       |
 | repository  | Handles the operations for the access to the database                 |
 | service     | Implements business logic                                             |
-| tests       | Tests everything which is in the other folders                        |
+| __tests__   | Tests everything which is in the other folders                        |
 
 ## Request Flux
 Route -> Middleware -> Controller -> Service -> Repository -> Database
@@ -53,5 +53,5 @@ Route -> Middleware -> Controller -> Service -> Repository -> Database
 ## TODO
 [] - Add the authentication middleware, after the implementation;
 [] - Add tests and mantain the coverage on 90%;
-[] - Configure the envs for the inteire project and make possible the dialect be chosen;
+[x] - Configure the envs for the inteire project and make possible the dialect be chosen;
 [] - Improve this docs, with motivation, vision and some other information about this project;

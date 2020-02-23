@@ -21,7 +21,7 @@ export default new class TeamController {
   }
 
   getTeam(req, res) {
-    return this.teamService.getGroup(req.params.id)
+    return this.teamService.getTeam(req.params.id)
       .then((team) => res.send(team));
   }
 

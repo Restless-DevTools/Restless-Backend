@@ -5,8 +5,8 @@ export default class TeamService {
     this.teamRepository = new TeamRepository();
   }
 
-  getAllteams() {
-    return this.teamRepository.getAllteams();
+  getAllTeams() {
+    return this.teamRepository.getAllTeams();
   }
 
   async create(team) {

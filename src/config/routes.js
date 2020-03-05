@@ -3,6 +3,8 @@ import GroupController from '../controllers/GroupController';
 import GroupValidator from '../middlewares/GroupValidator';
 import TeamController from '../controllers/TeamController';
 import TeamValidator from '../middlewares/TeamValidator';
+import UserValidator from '../middlewares/UserValidator';
+import UserController from '../controllers/UserController';
 
 const route = express();
 
@@ -25,6 +27,16 @@ route.put('/teams/update/:id',
   (req, res) => TeamController.edit(req, res));
 route.get('/teams/show/:id', (req, res) => TeamController.getTeam(req, res));
 route.delete('/teams/delete/:id', (req, res) => TeamController.delete(req, res));
+
+// user routes
+route.get('/users/all', (req, res) => UserController.getAllUsers(req, res));
+route.post('/users/create',
+  (req, res, next) => UserValidator.UserValidator(req, res, next),
+  (req, res) => UserController.create(req, res));
+route.put('/users/update/:id',
+  (req, res) => UserController.edit(req, res));
+route.get('/users/show/:id', (req, res) => UserController.getUser(req, res));
+route.delete('/users/delete/:id', (req, res) => UserController.delete(req, res));
 
 
 export default route;

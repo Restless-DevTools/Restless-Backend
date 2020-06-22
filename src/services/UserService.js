@@ -1,4 +1,5 @@
 import UserRepository from '../repositories/UserRepository';
+import Password from '../helpers/Password';
 
 export default class UserService {
   constructor() {
@@ -11,7 +12,7 @@ export default class UserService {
 
   async create(user) {
     try {
-      const userStored = await this.userRepository.getUserByUsername(user.username);
+      const userStored = await this.getUserByUsername(user.username);
       if (!userStored) {
         return this.userRepository.create(user);
       }
@@ -29,11 +30,27 @@ export default class UserService {
     return this.userRepository.getUser(id);
   }
 
+  getUserByUsername(username) {
+    return this.userRepository.getUserByUsername(username);
+  }
+
   async delete(id) {
     const deletedCode = await this.userRepository.delete(id);
     if (deletedCode === 1) {
       return { message: 'User deleted successfully', status: true };
     }
     return { message: 'It wasn not possible to deleted', status: false };
+  }
+
+  async login(user) {
+    const userStored = await this.getUserByUsername(user.username);
+    if (userStored) {
+      const passwordCompare = await Password.comparePassword(user.password, userStored.password);
+      if (passwordCompare) {
+        // generate and return the token
+        return { status: true };
+      }
+    }
+    return { message: 'The current user or password is invalid', status: false };
   }
 }

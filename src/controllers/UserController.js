@@ -5,9 +5,9 @@ export default new class UserController {
     this.userService = new UserService();
   }
 
-  getAllUsers(req, res) {
-    return this.userService.getAllUsers()
-      .then((users) => res.send(users));
+  async getAllUsers(req, res) {
+    const allUsers = await this.userService.getAllUsers();
+    return res.send(allUsers);
   }
 
   async create(req, res) {
@@ -33,5 +33,13 @@ export default new class UserController {
   async checkToken(req, res) {
     const status = await this.userService.delete(req.params.id);
     return res.send(status);
+  }
+
+  async login(req, res) {
+    const loginState = await this.userService.login(req.body);
+    if (!loginState.status) {
+      res.status(401);
+    }
+    return res.send(loginState);
   }
 }();

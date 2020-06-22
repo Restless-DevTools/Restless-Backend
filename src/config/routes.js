@@ -31,12 +31,16 @@ route.delete('/teams/delete/:id', (req, res) => TeamController.delete(req, res))
 // user routes
 route.get('/users/all', (req, res) => UserController.getAllUsers(req, res));
 route.post('/users/create',
-  (req, res, next) => UserValidator.UserValidator(req, res, next),
+  (req, res, next) => UserValidator.userValidator(req, res, next),
   (req, res) => UserController.create(req, res));
 route.put('/users/update/:id',
   (req, res) => UserController.edit(req, res));
 route.get('/users/show/:id', (req, res) => UserController.getUser(req, res));
 route.delete('/users/delete/:id', (req, res) => UserController.delete(req, res));
 
+// login routes
+route.post('/auth/login',
+  (req, res, next) => UserValidator.loginValidator(req, res, next),
+  (req, res) => UserController.login(req, res));
 
 export default route;

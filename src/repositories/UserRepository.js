@@ -23,11 +23,15 @@ export default class UserRepository {
   }
 
   async edit(paramsId, user) {
+    let password = null;
+    if (user.password) {
+      password = await Password.encryptPassword(user.password);
+    }
     await this.db.update({
       name: user.name,
       username: user.username,
       email: user.email,
-      password: user.password,
+      password,
     }, {
       where: {
         id: paramsId,

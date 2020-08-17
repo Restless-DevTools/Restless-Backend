@@ -53,4 +53,21 @@ export default class UserService {
     }
     return { message: 'The current user or password is invalid', status: false };
   }
+
+  async changeCurrentPassword(user) {
+    const currentUser = await this.getUserByUsername(user.username);
+    if (currentUser) {
+      const passwordCompare = await Password.comparePassword(
+        user.oldPassword,
+        currentUser.password,
+      );
+      if (passwordCompare) {
+        this.edit({
+          password: user.newPassword,
+        });
+        return { message: 'Password was changed!', status: true };
+      }
+    }
+    return { message: 'Something went wrong!', status: false };
+  }
 }

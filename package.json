@@ -15,33 +15,33 @@
     "test": "NODE_ENV=test jest"
   },
   "dependencies": {
-    "axios": "^0.19.2",
-    "bcrypt": "^4.0.0",
+    "axios": "^0.21.1",
+    "bcrypt": "^5.0.0",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "jest": "^25.1.0",
+    "jest": "^26.6.3",
     "joi": "^14.3.1",
-    "morgan": "^1.9.1",
-    "pg": "^7.18.2",
-    "sequelize": "^5.21.5"
+    "morgan": "^1.10.0",
+    "pg": "^8.5.1",
+    "sequelize": "^6.5.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.4",
-    "@babel/node": "^7.8.4",
-    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
-    "@babel/plugin-transform-spread": "^7.8.3",
-    "@babel/preset-env": "^7.8.4",
-    "babel-eslint": "^10.0.3",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-mocha": "^6.3.0",
-    "nodemon": "^2.0.2",
-    "sqlite3": "^4.1.1",
-    "supertest": "^4.0.2"
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
+    "@babel/plugin-transform-spread": "^7.12.1",
+    "@babel/preset-env": "^7.12.11",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.19.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-mocha": "^8.0.0",
+    "nodemon": "^2.0.7",
+    "sqlite3": "^5.0.1",
+    "supertest": "^6.1.3"
   }
 }

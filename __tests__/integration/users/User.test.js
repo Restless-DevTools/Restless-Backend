@@ -76,7 +76,6 @@ describe('Testing the login functions', () => {
     expect(response.status).toBe(200);
   });
 
-
   it('should login the User', async () => {
     const response = await request(app)
       .post('/auth/login')

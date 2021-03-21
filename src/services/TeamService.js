@@ -30,6 +30,6 @@ export default class TeamService {
     if (deletedCode === 1) {
       return { message: 'Team deleted successfully', status: true };
     }
-    return { message: 'It wasn not possible to deleted', status: false };
+    return { message: 'It was not possible to deleted', status: false };
   }
 }

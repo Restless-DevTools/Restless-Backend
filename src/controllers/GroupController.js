@@ -1,6 +1,6 @@
 import GroupService from '../services/GroupService';
 
-export default new class OcorrenciaController {
+export default new class GroupController {
   constructor() {
     this.groupService = new GroupService();
   }

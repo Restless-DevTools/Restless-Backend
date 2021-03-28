@@ -7,6 +7,8 @@ import UserValidator from '../middlewares/UserValidator';
 import UserController from '../controllers/UserController';
 import CollectionController from '../controllers/CollectionController';
 import CollectionValidator from '../middlewares/CollectionValidator';
+import AuthController from '../controllers/AuthController';
+import AuthValidator from '../middlewares/AuthValidator';
 
 const route = express();
 
@@ -52,7 +54,10 @@ route.delete('/collections/delete/:id', (req, res) => CollectionController.delet
 
 // login routes
 route.post('/auth/login',
-  (req, res, next) => UserValidator.loginValidator(req, res, next),
-  (req, res) => UserController.login(req, res));
+  (req, res, next) => AuthValidator.loginValidator(req, res, next),
+  (req, res) => AuthController.login(req, res));
+route.post('/auth/validate-token',
+  (req, res, next) => AuthValidator.tokenValidator(req, res, next),
+  (req, res) => AuthController.validateToken(req, res));
 
 export default route;

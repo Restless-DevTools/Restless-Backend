@@ -59,6 +59,7 @@ describe('Testing users CRUD operations', () => {
 
 describe('Testing the login functions', () => {
   let userId;
+  let token;
   const correctPassword = 'batma123';
   const wrongPassword = 'irra_nois_que_voa';
   const username = 'restlesstest';
@@ -84,7 +85,8 @@ describe('Testing the login functions', () => {
         password: correctPassword,
       });
 
-    expect(response.body.status).toBe(true);
+    token = response.body.token;
+    expect(response.body.user.username).toBe(username);
   });
 
   it('should not login the User', async () => {
@@ -114,6 +116,22 @@ describe('Testing the login functions', () => {
       .send();
 
     expect(response.status).toBe(200);
+  });
+
+  it('should validate token', async () => {
+    const response = await request(app)
+      .post('/auth/validate-token')
+      .send({ token });
+
+    expect(response.status).toBe(200);
+  });
+
+  it('should fail on validate token', async () => {
+    const response = await request(app)
+      .post('/auth/validate-token')
+      .send({ token: `${token}-irra` });
+
+    expect(response.status).toBe(401);
   });
 });
 

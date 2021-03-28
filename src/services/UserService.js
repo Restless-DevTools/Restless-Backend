@@ -42,18 +42,6 @@ export default class UserService {
     return { message: 'It was not possible to deleted', status: false };
   }
 
-  async login(user) {
-    const userStored = await this.getUserByUsername(user.username);
-    if (userStored) {
-      const passwordCompare = await Password.comparePassword(user.password, userStored.password);
-      if (passwordCompare) {
-        // generate and return the token
-        return { status: true };
-      }
-    }
-    return { message: 'The current user or password is invalid', status: false };
-  }
-
   async changeCurrentPassword(user) {
     const currentUser = await this.getUserByUsername(user.username);
     if (currentUser) {

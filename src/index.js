@@ -19,5 +19,4 @@ app.use(cors());
 // app.use(AuthValidator);
 app.use(routes);
 
-
 export default app;

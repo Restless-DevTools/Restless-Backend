@@ -39,19 +39,7 @@ export default class UserService {
     if (deletedCode === 1) {
       return { message: 'User deleted successfully', status: true };
     }
-    return { message: 'It wasn not possible to deleted', status: false };
-  }
-
-  async login(user) {
-    const userStored = await this.getUserByUsername(user.username);
-    if (userStored) {
-      const passwordCompare = await Password.comparePassword(user.password, userStored.password);
-      if (passwordCompare) {
-        // generate and return the token
-        return { status: true };
-      }
-    }
-    return { message: 'The current user or password is invalid', status: false };
+    return { message: 'It was not possible to deleted', status: false };
   }
 
   async changeCurrentPassword(user) {

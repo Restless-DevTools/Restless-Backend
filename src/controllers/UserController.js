@@ -34,12 +34,4 @@ export default new class UserController {
     const status = await this.userService.delete(req.params.id);
     return res.send(status);
   }
-
-  async login(req, res) {
-    const loginState = await this.userService.login(req.body);
-    if (!loginState.status) {
-      res.status(401);
-    }
-    return res.send(loginState);
-  }
 }();

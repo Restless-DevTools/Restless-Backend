@@ -9,4 +9,9 @@ export default class Group extends Model {
       { tableName: 'group', sequelize, underscored: true },
     );
   }
+
+  static associate(models) {
+    this.collectionAssociation = models.Group.belongsTo(models.Collection,
+      { foreignKey: 'collectionId' });
+  }
 }

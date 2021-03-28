@@ -1,11 +1,9 @@
 import Joi from 'joi';
 
-function userValidator(req, res, next) {
+function CollectionValidator(req, res, next) {
   const schema = Joi.object().keys({
     name: Joi.string().required(),
-    username: Joi.string().required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
+    permissionType: Joi.string().required().valid(['PUBLIC', 'PRIVATE', 'TEAM']),
   });
   const result = Joi.validate(req.body, schema);
   if (result.error === null) {
@@ -16,4 +14,4 @@ function userValidator(req, res, next) {
   }
 }
 
-export default { userValidator };
+export default { CollectionValidator };

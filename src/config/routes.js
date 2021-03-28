@@ -5,6 +5,10 @@ import TeamController from '../controllers/TeamController';
 import TeamValidator from '../middlewares/TeamValidator';
 import UserValidator from '../middlewares/UserValidator';
 import UserController from '../controllers/UserController';
+import CollectionController from '../controllers/CollectionController';
+import CollectionValidator from '../middlewares/CollectionValidator';
+import AuthController from '../controllers/AuthController';
+import AuthValidator from '../middlewares/AuthValidator';
 
 const route = express();
 
@@ -38,9 +42,22 @@ route.put('/users/update/:id',
 route.get('/users/show/:id', (req, res) => UserController.getUser(req, res));
 route.delete('/users/delete/:id', (req, res) => UserController.delete(req, res));
 
+// collection routes
+route.get('/collections/all', (req, res) => CollectionController.getAllCollections(req, res));
+route.post('/collections/create',
+  (req, res, next) => CollectionValidator.CollectionValidator(req, res, next),
+  (req, res) => CollectionController.create(req, res));
+route.put('/collections/update/:id',
+  (req, res) => CollectionController.edit(req, res));
+route.get('/collections/show/:id', (req, res) => CollectionController.getCollection(req, res));
+route.delete('/collections/delete/:id', (req, res) => CollectionController.delete(req, res));
+
 // login routes
 route.post('/auth/login',
-  (req, res, next) => UserValidator.loginValidator(req, res, next),
-  (req, res) => UserController.login(req, res));
+  (req, res, next) => AuthValidator.loginValidator(req, res, next),
+  (req, res) => AuthController.login(req, res));
+route.post('/auth/validate-token',
+  (req, res, next) => AuthValidator.tokenValidator(req, res, next),
+  (req, res) => AuthController.validateToken(req, res));
 
 export default route;

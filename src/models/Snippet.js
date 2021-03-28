@@ -5,6 +5,7 @@ export default class Snippet extends Model {
     return super.init(
       {
         name: { type: DataTypes.STRING },
+        description: { type: DataTypes.STRING },
         code: { type: DataTypes.TEXT },
       },
       { tableName: 'snippet', sequelize, underscored: true },

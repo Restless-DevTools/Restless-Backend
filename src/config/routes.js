@@ -57,7 +57,7 @@ route.post('/auth/login',
   (req, res, next) => AuthValidator.loginValidator(req, res, next),
   (req, res) => AuthController.login(req, res));
 route.post('/auth/validate-token',
-  (req, res, next) => AuthValidator.tokenValidator(req, res, next),
+  (req, res, next) => AuthValidator.checkTokenBody(req, res, next),
   (req, res) => AuthController.validateToken(req, res));
 
 export default route;

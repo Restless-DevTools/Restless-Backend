@@ -7,7 +7,7 @@ export default new class UserController {
 
   async login(req, res) {
     const loginState = await this.authService.login(req.body);
-    if (!loginState.status) {
+    if (!loginState.token) {
       res.status(401);
     }
     return res.send(loginState);

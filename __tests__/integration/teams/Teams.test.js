@@ -2,8 +2,6 @@ import request from 'supertest';
 import app from '../../../src/index';
 import models from '../../../src/models';
 
-// jest.mock('../../../src/middlewares/AuthValidator', () => jest.fn((req, res, next) => next()));
-
 beforeAll(async () => {
   await models.sequelize.sync();
 });

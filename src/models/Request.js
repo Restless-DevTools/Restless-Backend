@@ -13,11 +13,11 @@ export default class Request extends Model {
   }
 
   static associate(models) {
-    this.userAssociation = models.UserTeam.belongsTo(models.Request,
+    this.userAssociation = models.Request.belongsTo(models.User,
       { foreignKey: 'userId' });
-    this.teamAssociation = models.UserTeam.belongsTo(models.Request,
+    this.teamAssociation = models.Request.belongsTo(models.Team,
       { foreignKey: 'teamId' });
-    this.groupAssociation = models.UserTeam.belongsTo(models.Group,
+    this.groupAssociation = models.Request.belongsTo(models.Group,
       { foreignKey: 'groupId' });
   }
 }

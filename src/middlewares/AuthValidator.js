@@ -32,7 +32,7 @@ function checkTokenBody(req, res, next) {
 }
 
 async function authorizeRequest(req, res, next) {
-  const allowedRoutes = ['/auth/login'];
+  const allowedRoutes = ['/auth/login', '/users/create'];
 
   if (allowedRoutes.includes(req.url) || process.env.NODE_ENV === 'test') {
     next();

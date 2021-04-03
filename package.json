@@ -41,7 +41,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-mocha": "^8.0.0",
     "nodemon": "^2.0.7",
-    "sqlite3": "^5.0.1",
+    "sqlite3": "^5.0.2",
     "supertest": "^6.1.3"
   }
 }

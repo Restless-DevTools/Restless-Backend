@@ -12,7 +12,9 @@
     "production": "pm2 start dist -i 0",
     "prestart": "npm run -s build/server.js",
     "lint": "eslint src",
-    "test": "NODE_ENV=test jest"
+    "test": "NODE_ENV=test jest",
+    "migrate-database": "npx sequelize-cli db:migrate",
+    "create-migration": "npx sequelize-cli migration:generate"
   },
   "dependencies": {
     "axios": "^0.21.1",

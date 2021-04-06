@@ -6,6 +6,7 @@ export default class Collection extends Model {
       {
         name: { type: DataTypes.STRING },
         permissionType: { type: DataTypes.STRING },
+        description: { type: DataTypes.STRING },
       },
       { tableName: 'collection', sequelize, underscored: true },
     );

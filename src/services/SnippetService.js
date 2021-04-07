@@ -6,23 +6,23 @@ export default class SnippetService {
   }
 
   getAllSnippets() {
-    return this.snippetRepository.getAllCollections();
+    return this.snippetRepository.getAllSnippets();
   }
 
-  async create(collection) {
+  async create(snippet) {
     try {
-      return this.snippetRepository.create(collection);
+      return this.snippetRepository.create(snippet);
     } catch (err) {
       return err;
     }
   }
 
-  edit(paramsId, collection) {
-    return this.snippetRepository.edit(paramsId, collection);
+  edit(paramsId, snippet) {
+    return this.snippetRepository.edit(paramsId, snippet);
   }
 
   getSnippet(id) {
-    return this.snippetRepository.getCollection(id);
+    return this.snippetRepository.getSnippet(id);
   }
 
   async delete(id) {

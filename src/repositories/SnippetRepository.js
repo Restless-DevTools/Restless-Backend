@@ -11,22 +11,32 @@ export default class SnippetRepository {
     return this.db.findAll();
   }
 
-  async create(group) {
-    const createdGroup = await this.db.create({
-      name: group.name,
+  async create(snippet) {
+    const createdsnippet = await this.db.create({
+      name: snippet.name,
+      description: snippet.description,
+      code: snippet.code,
+      userId: snippet.userId,
+      teamId: snippet.teamId,
+      groupId: snippet.groupId,
     });
-    return createdGroup;
+    return createdsnippet;
   }
 
-  async edit(paramsId, group) {
+  async edit(paramsId, snippet) {
     await this.db.update({
-      name: group.name,
+      name: snippet.name,
+      description: snippet.description,
+      code: snippet.code,
+      userId: snippet.userId,
+      teamId: snippet.teamId,
+      groupId: snippet.groupId,
     }, {
       where: {
         id: paramsId,
       },
     });
-    return this.getGroup(paramsId);
+    return this.getSnippet(paramsId);
   }
 
   getSnippet(paramsId) {

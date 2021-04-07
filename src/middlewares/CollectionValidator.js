@@ -4,7 +4,7 @@ function CollectionValidator(req, res, next) {
   const schema = Joi.object().keys({
     name: Joi.string().required(),
     permissionType: Joi.string().required().valid(['PUBLIC', 'PRIVATE', 'TEAM']),
-    description: Joi.string(),
+    description: Joi.string().allow('', null),
   });
   const result = Joi.validate(req.body, schema);
   if (result.error === null) {

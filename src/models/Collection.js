@@ -11,4 +11,9 @@ export default class Collection extends Model {
       { tableName: 'collection', sequelize, underscored: true },
     );
   }
+
+  static associate(models) {
+    this.userAssociation = models.Collection.belongsTo(models.User,
+      { foreignKey: 'userId' });
+  }
 }

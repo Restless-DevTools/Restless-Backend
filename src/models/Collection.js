@@ -6,8 +6,14 @@ export default class Collection extends Model {
       {
         name: { type: DataTypes.STRING },
         permissionType: { type: DataTypes.STRING },
+        description: { type: DataTypes.STRING },
       },
       { tableName: 'collection', sequelize, underscored: true },
     );
+  }
+
+  static associate(models) {
+    this.userAssociation = models.Collection.belongsTo(models.User,
+      { foreignKey: 'userId' });
   }
 }

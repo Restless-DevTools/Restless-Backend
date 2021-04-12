@@ -14,6 +14,7 @@ describe('Testing Collection CRUD operations', () => {
       .send({
         name: 'restless-test',
         permissionType: 'PUBLIC',
+        description: 'test',
       });
     collectionId = response.body.id;
     expect(response.status).toBe(200);
@@ -60,6 +61,7 @@ describe('Testing Collection CRUD operations', () => {
       .send({
         name: 'restless-test',
         permissionType: 'JDSDSF',
+        description: 'test',
       });
     expect(response.status).toBe(400);
   });

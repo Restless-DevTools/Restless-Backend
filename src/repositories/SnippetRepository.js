@@ -19,6 +19,8 @@ export default class SnippetRepository {
       userId: snippet.userId,
       teamId: snippet.teamId,
       groupId: snippet.groupId,
+      language: snippet.language,
+      shareOption: snippet.shareOption,
     });
     return createdsnippet;
   }
@@ -31,6 +33,8 @@ export default class SnippetRepository {
       userId: snippet.userId,
       teamId: snippet.teamId,
       groupId: snippet.groupId,
+      language: snippet.language,
+      shareOption: snippet.shareOption,
     }, {
       where: {
         id: paramsId,

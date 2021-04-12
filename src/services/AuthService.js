@@ -16,7 +16,7 @@ export default class AuthService {
   validateToken(token) {
     return jwt.verify(token, this.secretKey, (err, decoded) => {
       if (err) {
-        return err;
+        return null;
       }
       return decoded;
     });

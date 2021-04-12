@@ -15,7 +15,7 @@ export default new class UserController {
 
   async validateToken(req, res) {
     const validateResult = this.authService.validateToken(req.body.token);
-    if (!validateResult.message) {
+    if (validateResult && !validateResult.message) {
       return res.send(validateResult);
     }
     res.status(401);

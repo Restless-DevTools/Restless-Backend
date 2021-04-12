@@ -21,9 +21,21 @@ describe('Testing snippets CRUD operations', () => {
           }
           handleScaleUp(1000);
         `,
+        language: 'javascript',
+        permissionType: 'PUBLIC',
       });
     snippetId = response.body.id;
     expect(response.status).toBe(200);
+  });
+
+  it('should fail on create a snippet', async () => {
+    const response = await request(app)
+      .post('/snippets/create')
+      .send({
+        name: 'restlessScale.js',
+        description: 'A script that will make us the most used developer tools in the world',
+      });
+    expect(response.status).toBe(400);
   });
 
   it('should return a single snippet', async () => {

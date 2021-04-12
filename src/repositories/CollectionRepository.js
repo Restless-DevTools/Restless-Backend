@@ -15,6 +15,7 @@ export default class CollectionRepository {
     const createdCollection = await this.db.create({
       name: collection.name,
       permissionType: collection.permissionType,
+      description: collection.description,
     });
     return createdCollection;
   }
@@ -23,6 +24,7 @@ export default class CollectionRepository {
     await this.db.update({
       name: collection.name,
       permissionType: collection.permissionType,
+      description: collection.description,
     }, {
       where: {
         id: paramsId,

@@ -7,6 +7,7 @@ export default class Request extends Model {
         link: { type: DataTypes.STRING },
         method: { type: DataTypes.STRING },
         name: { type: DataTypes.STRING },
+        format: { type: DataTypes.STRING },
       },
       { tableName: 'request', sequelize, underscored: true },
     );

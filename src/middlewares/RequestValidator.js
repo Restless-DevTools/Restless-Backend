@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 function RequestValidator(req, res, next) {
   const requestBodySchema = Joi.object().keys({
-    body: Joi.object().keys({}),
+    body: Joi.object(),
   });
   const requestHeaderSchema = Joi.object().keys({
     name: Joi.string().required(),
@@ -16,9 +16,10 @@ function RequestValidator(req, res, next) {
     name: Joi.string().required(),
     link: Joi.string().required(),
     method: Joi.string().required(),
-    userId: Joi.number().required(),
-    teamId: Joi.number().required(),
-    groupId: Joi.number().required(),
+    userId: Joi.number(),
+    teamId: Joi.number(),
+    groupId: Joi.number(),
+    format: Joi.string().required(),
     requestBody: requestBodySchema,
     requestHeaders: Joi.array().items(requestHeaderSchema),
     requestQueries: Joi.array().items(requestQuerySchema),

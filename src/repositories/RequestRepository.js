@@ -1,0 +1,53 @@
+import models from '../models';
+
+export default class RequestRepository {
+  constructor() {
+    this.db = models.Request;
+    this.sequelize = models.sequelize;
+    this.Op = models.Sequelize.Op;
+  }
+
+  getAllRequests() {
+    return this.db.findAll();
+  }
+
+  async create(request) {
+    const createdRequest = await this.db.create({
+      link: request.link,
+      method: request.method,
+      name: request.name,
+      format: request.format,
+    });
+    return createdRequest;
+  }
+
+  async edit(paramsId, request) {
+    await this.db.update({
+      link: request.link,
+      method: request.method,
+      name: request.name,
+      format: request.format,
+    }, {
+      where: {
+        id: paramsId,
+      },
+    });
+    return this.getRequest(paramsId);
+  }
+
+  getRequest(paramsId) {
+    return this.db.findOne({
+      where: {
+        id: paramsId,
+      },
+    });
+  }
+
+  delete(paramsId) {
+    return this.db.destroy({
+      where: {
+        id: paramsId,
+      },
+    });
+  }
+}

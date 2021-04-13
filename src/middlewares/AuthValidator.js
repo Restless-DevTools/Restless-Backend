@@ -46,12 +46,12 @@ async function authorizeRequest(req, res, next) {
       next();
     } else {
       LoggerHelper.addResponseError(res, {
-        message: 'O token fornecido não é valido',
+        message: 'Token is not valid',
       }, 401);
     }
   } else {
     LoggerHelper.addResponseError(res, {
-      message: 'Nenhum token fornecido',
+      message: 'Token is not valid',
     }, 401);
   }
 }

@@ -7,6 +7,8 @@ export default class Snippet extends Model {
         name: { type: DataTypes.STRING },
         description: { type: DataTypes.STRING },
         code: { type: DataTypes.TEXT },
+        language: { type: DataTypes.STRING },
+        shareOption: { type: DataTypes.STRING },
       },
       { tableName: 'snippet', sequelize, underscored: true },
     );

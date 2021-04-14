@@ -7,13 +7,14 @@ export default class GroupRepository {
     this.Op = models.Sequelize.Op;
   }
 
-  getAllGroups() {
-    return this.db.findAll();
+  getByCollectionId(collectionId) {
+    return this.db.findAll({ where: { collectionId } });
   }
 
   async create(group) {
     const createdGroup = await this.db.create({
       name: group.name,
+      collectionId: group.collectionId,
     });
     return createdGroup;
   }
@@ -21,6 +22,7 @@ export default class GroupRepository {
   async edit(paramsId, group) {
     await this.db.update({
       name: group.name,
+      collectionId: group.collectionId,
     }, {
       where: {
         id: paramsId,

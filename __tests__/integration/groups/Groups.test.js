@@ -13,6 +13,7 @@ describe('Testing Groups CRUD operations', () => {
       .post('/groups/create')
       .send({
         name: 'restless-test',
+        collectionId: 1,
       });
     groupId = response.body.id;
     expect(response.status).toBe(200);

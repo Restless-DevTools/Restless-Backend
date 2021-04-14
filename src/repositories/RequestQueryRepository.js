@@ -1,17 +1,17 @@
 import models from '../models';
 
-export default class RequestHeaderRepository {
+export default class RequestQueryRepository {
   constructor() {
-    this.db = models.RequestHeader;
+    this.db = models.RequestQuery;
     this.sequelize = models.sequelize;
     this.Op = models.Sequelize.Op;
   }
 
-  async create(requestHeader) {
+  async create(requestQuery) {
     const createdRequest = await this.db.create({
-      name: requestHeader.name,
-      value: requestHeader.value,
-      requestId: requestHeader.requestId,
+      name: requestQuery.name,
+      value: requestQuery.value,
+      requestId: requestQuery.requestId,
     });
     return createdRequest;
   }

@@ -50,4 +50,8 @@ export default class RequestRepository {
       },
     });
   }
+
+  getRequestsByGroupId(groupId) {
+    return this.db.findAll({ where: { groupId } });
+  }
 }

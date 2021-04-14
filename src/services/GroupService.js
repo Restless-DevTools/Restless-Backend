@@ -1,12 +1,23 @@
 import GroupRepository from '../repositories/GroupRepository';
+import RequestService from './RequestService';
 
 export default class GroupService {
   constructor() {
     this.groupRepository = new GroupRepository();
+    this.requestService = new RequestService();
   }
 
-  getAllGroups() {
-    return this.groupRepository.getAllGroups();
+  async getByCollectionId(collectionId) {
+    const groups = await this.groupRepository.getByCollectionId(collectionId);
+    const groupsWithRequests = await Promise.all(groups.map(async (group) => {
+      const groupWithRequests = { ...group.dataValues };
+      const requestsByGroup = await this.requestService.getRequestsByGroupId(groupWithRequests.id);
+
+      groupWithRequests.requests = requestsByGroup;
+      return groupWithRequests;
+    }));
+
+    return groupsWithRequests;
   }
 
   async create(group) {

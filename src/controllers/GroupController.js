@@ -29,4 +29,15 @@ export default new class GroupController {
     const status = await this.groupService.delete(req.params.id);
     return res.send(status);
   }
+
+  async getByCollectionId(req, res) {
+    const { collectionId } = req.query;
+    if (collectionId) {
+      const groups = await this.groupService.getByCollectionId(collectionId);
+      return res.send(groups);
+    }
+
+    res.status(400);
+    return res.send({ message: 'Invalid Request', status: false });
+  }
 }();

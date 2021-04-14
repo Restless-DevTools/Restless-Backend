@@ -7,10 +7,6 @@ export default class RequestBodyRepository {
     this.Op = models.Sequelize.Op;
   }
 
-  getAllRequests() {
-    return this.db.findAll();
-  }
-
   async create(requestBody) {
     const createdRequest = await this.db.create({
       body: requestBody.body,

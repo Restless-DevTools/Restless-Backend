@@ -17,6 +17,9 @@ export default class RequestRepository {
       method: request.method,
       name: request.name,
       format: request.format,
+      groupId: request.groupId,
+      userId: request.userId,
+      teamId: request.teamId,
     });
     return createdRequest;
   }
@@ -27,6 +30,9 @@ export default class RequestRepository {
       method: request.method,
       name: request.name,
       format: request.format,
+      groupId: request.groupId,
+      userId: request.userId,
+      teamId: request.teamId,
     }, {
       where: {
         id: paramsId,

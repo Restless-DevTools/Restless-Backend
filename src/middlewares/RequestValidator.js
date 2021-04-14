@@ -14,12 +14,12 @@ function RequestValidator(req, res, next) {
   });
   const schema = Joi.object().keys({
     name: Joi.string().required(),
-    link: Joi.string().required(),
-    method: Joi.string().required(),
+    link: Joi.string(),
+    method: Joi.string().required().valid(['GET', 'POST', 'PUT', 'DELETE']),
     userId: Joi.number(),
     teamId: Joi.number(),
     groupId: Joi.number(),
-    format: Joi.string().required(),
+    format: Joi.string().required().valid(['JSON', 'NO BODY']),
     requestBody: requestBodySchema,
     requestHeaders: Joi.array().items(requestHeaderSchema),
     requestQueries: Joi.array().items(requestQuerySchema),

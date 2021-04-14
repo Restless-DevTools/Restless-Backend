@@ -7,6 +7,11 @@ export default class GroupService {
     this.requestService = new RequestService();
   }
 
+  async getAllGroups(collectionId) {
+    const groups = await this.groupRepository.getByCollectionId(collectionId);
+    return groups;
+  }
+
   async getByCollectionId(collectionId) {
     const groups = await this.groupRepository.getByCollectionId(collectionId);
     const groupsWithRequests = await Promise.all(groups.map(async (group) => {

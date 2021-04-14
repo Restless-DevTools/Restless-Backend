@@ -13,7 +13,7 @@ describe('Testing requests CRUD operations', () => {
       .post('/requests/create')
       .send({
         link: 'http://restlessdevtools.com/irra',
-        method: 'post',
+        method: 'POST',
         name: 'We want to yell IRRA',
         format: 'JSON',
       });

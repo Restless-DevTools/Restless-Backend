@@ -4,6 +4,7 @@ import Console from 'console';
 import Team from './Team';
 import User from './User';
 import UserTeam from './UserTeam';
+import UserConfirmation from './UserConfirmation';
 import Collection from './Collection';
 import Group from './Group';
 import Request from './Request';
@@ -47,6 +48,7 @@ const models = {
   Team: Team.init(sequelize, Sequelize),
   User: User.init(sequelize, Sequelize),
   UserTeam: UserTeam.init(sequelize, Sequelize),
+  UserConfirmation: UserConfirmation.init(sequelize, Sequelize),
   Collection: Collection.init(sequelize, Sequelize),
   Group: Group.init(sequelize, Sequelize),
   Request: Request.init(sequelize, Sequelize),

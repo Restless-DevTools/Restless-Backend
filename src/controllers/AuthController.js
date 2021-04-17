@@ -21,4 +21,9 @@ export default new class UserController {
     res.status(401);
     return res.send({ message: 'Token are not valid', status: false });
   }
+
+  async requestRecoverPassword(req, res) {
+    const requestedRecoverPassword = await this.authService.requestRecoverPassword(req.body);
+    return res.send(requestedRecoverPassword);
+  }
 }();

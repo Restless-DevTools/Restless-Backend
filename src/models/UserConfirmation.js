@@ -6,7 +6,7 @@ export default class UserConfirmation extends Model {
       {
         username: { type: DataTypes.STRING },
         email: { type: DataTypes.STRING },
-        code: { type: DataTypes.STRING },
+        verificationCode: { type: DataTypes.STRING },
         validated: { type: DataTypes.BOOLEAN },
       },
       { tableName: 'user_confirmation', sequelize, underscored: true },

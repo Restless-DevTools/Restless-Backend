@@ -12,7 +12,7 @@ export default class UserConfirmationRepository {
       const createdUserConfirmation = await this.db.create({
         username: userConfirmation.username,
         email: userConfirmation.email,
-        code: userConfirmation.code,
+        verificationCode: userConfirmation.verificationCode,
         validated: false,
       });
       return createdUserConfirmation;
@@ -21,9 +21,12 @@ export default class UserConfirmationRepository {
     }
   }
 
-  async edit(paramsId, code) {
+  async edit(paramsId, userConfirmation) {
     await this.db.update({
-      code,
+      username: userConfirmation.username,
+      email: userConfirmation.email,
+      verificationCode: userConfirmation.verificationCode,
+      validated: userConfirmation.validated,
     }, {
       where: {
         id: paramsId,
@@ -42,6 +45,11 @@ export default class UserConfirmationRepository {
 
   searchUserConfirmation(userConfirmation) {
     const where = {};
+
+    if (userConfirmation.verificationCode) {
+      where.verificationCode = userConfirmation.verificationCode;
+      where.validated = false;
+    }
 
     if (userConfirmation.username) {
       where.username = userConfirmation.username;

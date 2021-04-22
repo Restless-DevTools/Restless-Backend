@@ -26,4 +26,9 @@ export default new class UserController {
     const requestedRecoverPassword = await this.authService.requestRecoverPassword(req.body);
     return res.send(requestedRecoverPassword);
   }
+
+  async recoverPassword(req, res) {
+    const recoveredPassword = await this.authService.recoverPassword(req.body);
+    return res.send(recoveredPassword);
+  }
 }();

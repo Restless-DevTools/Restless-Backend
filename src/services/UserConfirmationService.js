@@ -9,8 +9,8 @@ export default class UserConfirmationService {
     return this.userConfirmationRepository.create(userConfirmation);
   }
 
-  edit(paramsId, code) {
-    return this.userConfirmationRepository.edit(paramsId, code);
+  edit(paramsId, userConfirmation) {
+    return this.userConfirmationRepository.edit(paramsId, userConfirmation);
   }
 
   getUserConfirmation(id) {

@@ -1,14 +1,15 @@
 import FSHelper from './FSHelper';
+import EmailSender from './EmailSender';
 
 export default class SendEmail {
   constructor() {
     this.fsHelper = new FSHelper();
   }
 
-  async sendEmail(payload) {
+  async createEmail(payload) {
     try {
       const mailOptions = {
-        from: process.env.EMAIL_FROM,
+        from: process.env.SMTP_USER,
         to: payload.email,
         subject: payload.subject,
         text: payload.body,
@@ -33,7 +34,7 @@ export default class SendEmail {
         }));
       }
 
-      return this.awsSESHelper.sendEmail(mailOptions);
+      return EmailSender.sendEmail(mailOptions);
     } catch (error) {
       return { message: 'Erro', status: false };
     }

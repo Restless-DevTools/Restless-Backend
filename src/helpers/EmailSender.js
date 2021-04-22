@@ -7,12 +7,12 @@ async function sendEmail(dataToSend) {
   } = dataToSend;
 
   const transport = nodemailer.createTransport({
-    host: 'email-smtp.us-east-1.amazonaws.com',
+    host: 'in-v3.mailjet.com',
     secureConnection: true,
-    port: 465,
+    port: 587,
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      user: 'f0c77f40dbf917ed03e7d645259e7295',
+      pass: '87fba9564c6182ff932bc635909f1ff0',
     },
   });
 

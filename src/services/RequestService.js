@@ -2,6 +2,7 @@ import RequestBodyRepository from '../repositories/RequestBodyRepository';
 import RequestHeaderRepository from '../repositories/RequestHeaderRepository';
 import RequestQueryRepository from '../repositories/RequestQueryRepository';
 import RequestRepository from '../repositories/RequestRepository';
+import Logger from '../helpers/Logger';
 
 export default class RequestService {
   constructor() {
@@ -48,7 +49,7 @@ export default class RequestService {
 
       return requestCreated;
     } catch (err) {
-      console.log(err);
+      Logger.printError(err);
       return err;
     }
   }

@@ -13,7 +13,6 @@ describe('Testing Groups CRUD operations', () => {
       .post('/groups/create')
       .send({
         name: 'restless-test',
-        collectionId: 1,
       });
     groupId = response.body.id;
     expect(response.status).toBe(200);
@@ -26,14 +25,6 @@ describe('Testing Groups CRUD operations', () => {
       .send();
 
     expect(response.body.name).toBe(name);
-  });
-
-  it('should return all Groups', async () => {
-    const response = await request(app)
-      .get('/groups/all')
-      .send();
-
-    expect(response.body.length).toBeGreaterThanOrEqual(1);
   });
 
   it('should update a Group', async () => {

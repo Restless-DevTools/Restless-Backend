@@ -27,7 +27,9 @@
     "jest": "^26.6.3",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
+    "keygenerator": "^1.0.4",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.5.0",
     "pg": "^8.5.1",
     "sequelize": "^6.5.0"
   },

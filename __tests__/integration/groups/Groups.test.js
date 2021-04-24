@@ -27,14 +27,6 @@ describe('Testing Groups CRUD operations', () => {
     expect(response.body.name).toBe(name);
   });
 
-  it('should return all Groups', async () => {
-    const response = await request(app)
-      .get('/groups/all')
-      .send();
-
-    expect(response.body.length).toBeGreaterThanOrEqual(1);
-  });
-
   it('should update a Group', async () => {
     const response = await request(app)
       .put(`/groups/update/${groupId}`)

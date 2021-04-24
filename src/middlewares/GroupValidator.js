@@ -3,6 +3,7 @@ import Joi from 'joi';
 function GroupValidator(req, res, next) {
   const schema = Joi.object().keys({
     name: Joi.string().required(),
+    collectionId: Joi.number(),
   });
   const result = Joi.validate(req.body, schema);
   if (result.error === null) {

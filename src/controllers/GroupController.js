@@ -5,9 +5,14 @@ export default new class GroupController {
     this.groupService = new GroupService();
   }
 
-  getAllGroups(req, res) {
-    return this.groupService.getAllGroups()
-      .then((groups) => res.send(groups));
+  async getAllGroups(req, res) {
+    const { collectionId } = req.query;
+    if (collectionId) {
+      const groups = await this.groupService.getAllGroups(collectionId);
+      return res.send(groups);
+    }
+    res.status(400);
+    return res.send({ message: 'Invalid Request', status: false });
   }
 
   async create(req, res) {
@@ -28,5 +33,16 @@ export default new class GroupController {
   async delete(req, res) {
     const status = await this.groupService.delete(req.params.id);
     return res.send(status);
+  }
+
+  async getByCollectionId(req, res) {
+    const { collectionId } = req.query;
+    if (collectionId) {
+      const groups = await this.groupService.getByCollectionId(collectionId);
+      return res.send(groups);
+    }
+
+    res.status(400);
+    return res.send({ message: 'Invalid Request', status: false });
   }
 }();

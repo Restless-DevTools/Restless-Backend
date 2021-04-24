@@ -10,5 +10,6 @@ export default async function GroupsRoutes(router) {
     (req, res) => GroupController.edit(req, res));
   router.get('/groups/show/:id', (req, res) => GroupController.getGroup(req, res));
   router.delete('/groups/delete/:id', (req, res) => GroupController.delete(req, res));
+  router.get('/groups/get-by-collection', (req, res) => GroupController.getByCollectionId(req, res));
   return router;
 }

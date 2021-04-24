@@ -16,6 +16,17 @@ describe('Testing Collection CRUD operations', () => {
         permissionType: 'PUBLIC',
         description: 'test',
       });
+    expect(response.status).toBe(200);
+  });
+
+  it('should create a Collection for delete', async () => {
+    const response = await request(app)
+      .post('/collections/create')
+      .send({
+        name: 'restless-test',
+        permissionType: 'PUBLIC',
+        description: 'test',
+      });
     collectionId = response.body.id;
     expect(response.status).toBe(200);
   });
@@ -27,14 +38,6 @@ describe('Testing Collection CRUD operations', () => {
       .send();
 
     expect(response.body.name).toBe(name);
-  });
-
-  it('should return all Collections', async () => {
-    const response = await request(app)
-      .get('/collections/all')
-      .send();
-
-    expect(response.body.length).toBeGreaterThanOrEqual(1);
   });
 
   it('should update a Collection', async () => {

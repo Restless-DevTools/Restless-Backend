@@ -12,11 +12,12 @@ export default class UserService {
 
   async create(user) {
     try {
-      const userStored = await this.getUserByUsername(user.username);
+      const userStored = await this.userRepository.checkDuplicity(user);
+
       if (!userStored) {
         return this.userRepository.create(user);
       }
-      return { message: 'Username already taken!', status: false };
+      return { message: 'Username or email already taken!', status: false };
     } catch (err) {
       return err;
     }
@@ -30,8 +31,8 @@ export default class UserService {
     return this.userRepository.getUser(id);
   }
 
-  getUserByUsername(username) {
-    return this.userRepository.getUserByUsername(username);
+  searchUser(user) {
+    return this.userRepository.searchUser(user);
   }
 
   async delete(id) {
@@ -43,7 +44,7 @@ export default class UserService {
   }
 
   async changeCurrentPassword(user) {
-    const currentUser = await this.getUserByUsername(user.username);
+    const currentUser = await this.searchUser(user);
     if (currentUser) {
       const passwordCompare = await Password.comparePassword(
         user.oldPassword,

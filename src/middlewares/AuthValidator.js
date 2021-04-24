@@ -18,6 +18,19 @@ function loginValidator(req, res, next) {
   }
 }
 
+function githubLoginValidator(req, res, next) {
+  const schema = Joi.object().keys({
+    code: Joi.string().required(),
+  });
+  const result = Joi.validate(req.body, schema);
+  if (result.error === null) {
+    next();
+  } else {
+    res.status(400);
+    res.send({ code: result.error.details[0].path[0], message: result.error.details[0].message });
+  }
+}
+
 function checkTokenBody(req, res, next) {
   const schema = Joi.object().keys({
     token: Joi.string().required(),
@@ -32,7 +45,12 @@ function checkTokenBody(req, res, next) {
 }
 
 async function authorizeRequest(req, res, next) {
-  const allowedRoutes = ['/auth/login', '/auth/validate-token', '/users/create'];
+  const allowedRoutes = [
+    '/auth/login',
+    '/auth/github-login',
+    '/auth/validate-token',
+    '/users/create',
+  ];
 
   if (allowedRoutes.includes(req.url) || process.env.NODE_ENV === 'test') {
     next();
@@ -56,4 +74,6 @@ async function authorizeRequest(req, res, next) {
   }
 }
 
-export default { loginValidator, checkTokenBody, authorizeRequest };
+export default {
+  loginValidator, githubLoginValidator, checkTokenBody, authorizeRequest,
+};

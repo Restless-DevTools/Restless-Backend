@@ -5,6 +5,7 @@ import TeamsRoutes from './TeamsRoutes';
 import UsersRoutes from './UsersRoutes';
 import CollectionsRoutes from './CollectionsRoutes';
 import SnippetsRoutes from './SnippetsRoutes';
+import RequestsRoutes from './RequestsRoutes';
 
 const router = express();
 
@@ -25,5 +26,8 @@ router.route(AuthRoutes(router));
 
 // snippet routes
 router.route(SnippetsRoutes(router));
+
+// request routes
+router.route(RequestsRoutes(router));
 
 export default router;

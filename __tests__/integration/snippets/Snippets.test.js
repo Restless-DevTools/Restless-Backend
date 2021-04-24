@@ -22,7 +22,7 @@ describe('Testing snippets CRUD operations', () => {
           handleScaleUp(1000);
         `,
         language: 'javascript',
-        permissionType: 'PUBLIC',
+        shareOption: 'PUBLIC',
       });
     snippetId = response.body.id;
     expect(response.status).toBe(200);

@@ -56,10 +56,29 @@ export default class UserRepository {
     });
   }
 
-  getUserByUsername(username) {
+  searchUser(user) {
+    const where = {};
+
+    if (user.username) {
+      where.username = user.username;
+    }
+
+    if (user.email) {
+      where.email = user.email;
+    }
+
     return this.db.findOne({
+      where,
+    });
+  }
+
+  checkDuplicity(user) {
+    return this.db.count({
       where: {
-        username,
+        [this.Op.or]: {
+          username: user.username,
+          email: user.email,
+        },
       },
     });
   }

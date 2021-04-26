@@ -9,7 +9,7 @@ export default class SendEmail {
   async createEmail(payload) {
     try {
       const mailOptions = {
-        from: process.env.SMTP_USER,
+        from: process.env.SMTP_FROM,
         to: payload.email,
         subject: payload.subject,
         text: payload.body,

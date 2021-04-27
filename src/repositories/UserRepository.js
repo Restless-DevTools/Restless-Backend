@@ -18,6 +18,7 @@ export default class UserRepository {
       username: user.username,
       email: user.email,
       password: await Password.encryptPassword(user.password),
+      github: user.github,
     });
     return createdUser;
   }
@@ -32,6 +33,7 @@ export default class UserRepository {
       username: user.username,
       email: user.email,
       password,
+      github: user.github,
     }, {
       where: {
         id: paramsId,
@@ -65,6 +67,10 @@ export default class UserRepository {
 
     if (user.email) {
       where.email = user.email;
+    }
+
+    if (user.github) {
+      where.github = user.github;
     }
 
     return this.db.findOne({

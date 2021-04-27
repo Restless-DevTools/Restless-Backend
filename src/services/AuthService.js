@@ -80,10 +80,24 @@ export default class AuthService {
         },
       });
 
+      const userStored = await this.userService
+        .searchUser({ username: user.login, github: true });
+
+      if (!userStored) {
+        const userToCreate = {
+          username: user.login,
+          name: user.name,
+          email: user.email,
+          github: true,
+        };
+
+        return { status: true, needRegister: true, userToCreate };
+      }
+
       const userForToken = {
         status: true,
-        username: user.username,
-        name: user.name,
+        username: userStored.username,
+        name: userStored.name,
       };
       const token = this.generateToken(userForToken);
       return { token, user: userForToken };

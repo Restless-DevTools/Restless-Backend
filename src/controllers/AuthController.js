@@ -15,9 +15,6 @@ export default new class UserController {
 
   async githubLogin(req, res) {
     const loginState = await this.authService.githubLogin(req.body);
-    if (!loginState.token) {
-      res.status(401);
-    }
     return res.send(loginState);
   }
 

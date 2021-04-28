@@ -48,6 +48,16 @@ export default class UserRepository {
     });
   }
 
+  getUsersPublicAttributes(usersIds) {
+    const ids = Array.isArray(usersIds) ? usersIds : [usersIds];
+    return this.db.findAll({
+      where: {
+        id: { [this.Op.in]: ids },
+      },
+      attributes: ['id', 'name', 'username'],
+    });
+  }
+
   delete(paramsId) {
     return this.db.destroy({
       where: {

@@ -5,6 +5,7 @@ export default class Team extends Model {
     return super.init(
       {
         name: { type: DataTypes.STRING },
+        description: { type: DataTypes.STRING },
       },
       { tableName: 'team', sequelize, underscored: true },
     );

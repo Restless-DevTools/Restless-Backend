@@ -59,4 +59,8 @@ export default class UserService {
     }
     return { message: 'Something went wrong!', status: false };
   }
+
+  async getUsersPublicAttributes(userIds) {
+    return this.userRepository.getUsersPublicAttributes(userIds);
+  }
 }

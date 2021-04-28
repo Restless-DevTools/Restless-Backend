@@ -1,16 +1,22 @@
+import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import Keygenerator from 'keygenerator';
-import Password from '../helpers/Password';
-import UserService from './UserService';
-import UserConfirmationService from './UserConfirmationService';
-import Logger from '../helpers/Logger';
 import EmailHelper from '../helpers/EmailHelper';
 import FSHelper from '../helpers/FSHelper';
+import Logger from '../helpers/Logger';
+import Password from '../helpers/Password';
+import UserConfirmationService from './UserConfirmationService';
+import UserService from './UserService';
 
 export default class AuthService {
   constructor() {
     this.secretKey = process.env.JWT_KEY;
     this.expirationTime = process.env.JWT_EXPIRATION_TIME;
+    this.githubClientId = process.env.GITHUB_CLIENT_ID;
+    this.githubClientSecret = process.env.GITHUB_CLIENT_SECRET;
+    this.githubRedirectUri = process.env.GITHUB_REDIRECT_URI;
+    this.githubAccessTokenApi = process.env.GITHUB_ACCESS_TOKEN_API;
+    this.githubUserApi = process.env.GITHUB_USER_API;
     this.userService = new UserService();
     this.userConfirmationService = new UserConfirmationService();
     this.emailHelper = new EmailHelper();
@@ -30,21 +36,76 @@ export default class AuthService {
     });
   }
 
+  getUserToken(user) {
+    const userForToken = {
+      status: true,
+      username: user.username,
+      name: user.name,
+    };
+    const token = this.generateToken(userForToken);
+    return { token, user: userForToken };
+  }
+
   async login(user) {
     const userStored = await this.userService.searchUser(user);
     if (userStored) {
       const passwordCompare = await Password.comparePassword(user.password, userStored.password);
       if (passwordCompare) {
-        const userForToken = {
-          status: true,
-          username: userStored.username,
-          name: userStored.name,
-        };
-        const token = this.generateToken(userForToken);
-        return { token, user: userForToken };
+        return this.getUserToken(userStored);
       }
     }
     return { message: 'The current user or password is invalid', status: false };
+  }
+
+  async githubLogin({ code }) {
+    try {
+      const dataToSend = {
+        code,
+        client_id: this.githubClientId,
+        client_secret: this.githubClientSecret,
+        redirect_uri: this.githubRedirectUri,
+      };
+
+      const { data: urlParams } = await axios.post(
+        this.githubAccessTokenApi,
+        dataToSend,
+      );
+
+      const params = new URLSearchParams(urlParams);
+      const accessToken = params.get('access_token');
+
+      const { data: user } = await axios.post(this.githubUserApi, null, {
+        headers: {
+          Authorization: `token ${accessToken}`,
+        },
+      });
+
+      const userStored = await this.userService.searchUser({ username: user.login, github: true });
+
+      if (!userStored) {
+        const userToCreate = {
+          name: user.name,
+          username: user.login,
+          email: user.email,
+          github: true,
+        };
+
+        const createdUser = await this.userService.create(userToCreate);
+
+        if (!createdUser.id) {
+          return {
+            message: 'Github username or email already taken! Please register manually.',
+            status: false,
+          };
+        }
+
+        return this.getUserToken(createdUser);
+      }
+
+      return this.getUserToken(userStored);
+    } catch (error) {
+      return { message: error.message, status: false };
+    }
   }
 
   async requestRecoverPassword(userConfirmation) {

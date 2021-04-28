@@ -8,6 +8,7 @@ export default class User extends Model {
         username: { type: DataTypes.STRING },
         email: { type: DataTypes.STRING },
         password: { type: DataTypes.STRING },
+        github: { type: DataTypes.BOOLEAN },
       },
       { tableName: 'user', sequelize, underscored: true },
     );

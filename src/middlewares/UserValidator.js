@@ -6,6 +6,7 @@ function userValidator(req, res, next) {
     username: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().required(),
+    github: Joi.boolean(),
   });
   const result = Joi.validate(req.body, schema);
   if (result.error === null) {

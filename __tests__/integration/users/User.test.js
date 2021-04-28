@@ -7,22 +7,26 @@ beforeAll(async () => {
 });
 
 describe('Testing users CRUD operations', () => {
+  const name = 'Restless test';
+  const username = 'usersTest';
+  const email = 'usersTest@restlessdevtools.com';
   let userId;
+
   it('should create a User', async () => {
     const response = await request(app)
       .post('/users/create')
       .send({
-        name: 'Restless test',
-        username: 'restlesstest',
-        email: 'restless-test@restless.com',
+        name,
+        username,
+        email,
         password: 'batma123',
       });
+
     userId = response.body.id;
     expect(response.status).toBe(200);
   });
 
   it('should return a single User', async () => {
-    const name = 'Restless test';
     const response = await request(app)
       .get(`/users/show/${userId}`)
       .send();
@@ -42,7 +46,7 @@ describe('Testing users CRUD operations', () => {
     const response = await request(app)
       .put(`/users/update/${userId}`)
       .send({
-        name: 'restless-test-2',
+        name: 'Restless test 2',
       });
 
     expect(response.status).toBe(200);
@@ -58,19 +62,21 @@ describe('Testing users CRUD operations', () => {
 });
 
 describe('Testing the login functions', () => {
-  let userId;
-  let token;
+  const name = 'Restless test';
+  const username = 'loginTest';
+  const email = 'loginTest@restlessdevtools.com';
   const correctPassword = 'batma123';
   const wrongPassword = 'irra_nois_que_voa';
-  const username = 'restlesstest';
+  let userId;
+  let token;
 
   it('should create a User', async () => {
     const response = await request(app)
       .post('/users/create')
       .send({
-        name: 'Restless test',
+        name,
         username,
-        email: 'restless-test@restless.com',
+        email,
         password: correctPassword,
       });
     userId = response.body.id;
@@ -132,6 +138,22 @@ describe('Testing the login functions', () => {
       .send({ token: `${token}-irra` });
 
     expect(response.status).toBe(401);
+  });
+
+  it('should get a bad request on GitHub login', async () => {
+    const response = await request(app)
+      .post('/auth/github-login')
+      .send({ wrongProp: 'wrong value' });
+
+    expect(response.status).toBe(400);
+  });
+
+  it('should fail on GitHub login with wrong code', async () => {
+    const response = await request(app)
+      .post('/auth/github-login')
+      .send({ code: 'random-code' });
+
+    expect(response.body.status).toBe(false);
   });
 });
 

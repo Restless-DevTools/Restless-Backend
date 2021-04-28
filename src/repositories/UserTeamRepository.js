@@ -1,8 +1,8 @@
 import models from '../models';
 
-export default class TeamRepository {
+export default class UserTeamRepository {
   constructor() {
-    this.db = models.Team;
+    this.db = models.UserTeam;
     this.sequelize = models.sequelize;
     this.Op = models.Sequelize.Op;
   }
@@ -13,16 +13,18 @@ export default class TeamRepository {
 
   async create(team) {
     const createdTeam = await this.db.create({
-      name: team.name,
-      description: team.description,
+      userId: team.userId,
+      teamId: team.teamId,
+      role: team.role,
     });
     return createdTeam;
   }
 
   async edit(paramsId, team) {
     await this.db.update({
-      name: team.name,
-      description: team.description,
+      userId: team.userId,
+      teamId: team.teamId,
+      role: team.role,
     }, {
       where: {
         id: paramsId,
@@ -31,10 +33,18 @@ export default class TeamRepository {
     return this.getTeam(paramsId);
   }
 
-  getTeam(paramsId) {
-    return this.db.findOne({
+  getByTeam(teamId) {
+    return this.db.findAll({
       where: {
-        id: paramsId,
+        teamId,
+      },
+    });
+  }
+
+  getByUserId(userId) {
+    return this.db.findAll({
+      where: {
+        userId,
       },
     });
   }

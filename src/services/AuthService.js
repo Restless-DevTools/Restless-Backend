@@ -36,18 +36,22 @@ export default class AuthService {
     });
   }
 
+  getUserToken(user) {
+    const userForToken = {
+      status: true,
+      username: user.username,
+      name: user.name,
+    };
+    const token = this.generateToken(userForToken);
+    return { token, user: userForToken };
+  }
+
   async login(user) {
     const userStored = await this.userService.searchUser(user);
     if (userStored) {
       const passwordCompare = await Password.comparePassword(user.password, userStored.password);
       if (passwordCompare) {
-        const userForToken = {
-          status: true,
-          username: userStored.username,
-          name: userStored.name,
-        };
-        const token = this.generateToken(userForToken);
-        return { token, user: userForToken };
+        return this.getUserToken(userStored);
       }
     }
     return { message: 'The current user or password is invalid', status: false };
@@ -76,7 +80,6 @@ export default class AuthService {
         },
       });
 
-      const userForToken = { status: true };
       const userStored = await this.userService.searchUser({ username: user.login, github: true });
 
       if (!userStored) {
@@ -96,15 +99,10 @@ export default class AuthService {
           };
         }
 
-        userForToken.username = createdUser.username;
-        userForToken.name = createdUser.name;
-      } else {
-        userForToken.username = userStored.username;
-        userForToken.name = userStored.name;
+        return this.getUserToken(createdUser);
       }
 
-      const token = this.generateToken(userForToken);
-      return { token, user: userForToken };
+      return this.getUserToken(userStored);
     } catch (error) {
       return { message: error.message, status: false };
     }

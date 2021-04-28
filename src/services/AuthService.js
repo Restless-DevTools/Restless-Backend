@@ -1,13 +1,12 @@
 import axios from 'axios';
-import FormData from 'form-data';
 import jwt from 'jsonwebtoken';
 import Keygenerator from 'keygenerator';
-import Password from '../helpers/Password';
-import UserService from './UserService';
-import UserConfirmationService from './UserConfirmationService';
-import Logger from '../helpers/Logger';
 import EmailHelper from '../helpers/EmailHelper';
 import FSHelper from '../helpers/FSHelper';
+import Logger from '../helpers/Logger';
+import Password from '../helpers/Password';
+import UserConfirmationService from './UserConfirmationService';
+import UserService from './UserService';
 
 export default class AuthService {
   constructor() {
@@ -16,6 +15,8 @@ export default class AuthService {
     this.githubClientId = process.env.GITHUB_CLIENT_ID;
     this.githubClientSecret = process.env.GITHUB_CLIENT_SECRET;
     this.githubRedirectUri = process.env.GITHUB_REDIRECT_URI;
+    this.githubAccessTokenApi = process.env.GITHUB_ACCESS_TOKEN_API;
+    this.githubUserApi = process.env.GITHUB_USER_API;
     this.userService = new UserService();
     this.userConfirmationService = new UserConfirmationService();
     this.emailHelper = new EmailHelper();
@@ -54,51 +55,54 @@ export default class AuthService {
 
   async githubLogin({ code }) {
     try {
-      const formData = new FormData();
-      formData.append('client_id', this.githubClientId);
-      formData.append('client_secret', this.githubClientSecret);
-      formData.append('code', code);
-      formData.append('redirect_uri', this.githubRedirectUri);
+      const dataToSend = {
+        code,
+        client_id: this.githubClientId,
+        client_secret: this.githubClientSecret,
+        redirect_uri: this.githubRedirectUri,
+      };
 
       const { data: urlParams } = await axios.post(
-        'https://github.com/login/oauth/access_token',
-        formData,
-        {
-          headers: {
-            // eslint-disable-next-line no-underscore-dangle
-            'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-          },
-        },
+        this.githubAccessTokenApi,
+        dataToSend,
       );
 
       const params = new URLSearchParams(urlParams);
       const accessToken = params.get('access_token');
 
-      const { data: user } = await axios.post('https://api.github.com/user', null, {
+      const { data: user } = await axios.post(this.githubUserApi, null, {
         headers: {
           Authorization: `token ${accessToken}`,
         },
       });
 
-      const userStored = await this.userService
-        .searchUser({ username: user.login, github: true });
+      const userForToken = { status: true };
+      const userStored = await this.userService.searchUser({ username: user.login, github: true });
 
       if (!userStored) {
         const userToCreate = {
-          username: user.login,
           name: user.name,
+          username: user.login,
           email: user.email,
           github: true,
         };
 
-        return { status: true, needRegister: true, userToCreate };
+        const createdUser = await this.userService.create(userToCreate);
+
+        if (!createdUser.id) {
+          return {
+            message: 'Github username or email already taken! Please register manually.',
+            status: false,
+          };
+        }
+
+        userForToken.username = createdUser.username;
+        userForToken.name = createdUser.name;
+      } else {
+        userForToken.username = userStored.username;
+        userForToken.name = userStored.name;
       }
 
-      const userForToken = {
-        status: true,
-        username: userStored.username,
-        name: userStored.name,
-      };
       const token = this.generateToken(userForToken);
       return { token, user: userForToken };
     } catch (error) {

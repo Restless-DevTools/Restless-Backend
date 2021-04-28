@@ -7,8 +7,9 @@ beforeAll(async () => {
 });
 
 describe('Testing request recover password functions', () => {
-  const username = 'restlesstest';
-  const email = 'restless-test@restless.com';
+  const username = 'requestRecoverTest';
+  const email = 'requestRecoverTest@restlessdevtools.com';
+  let userId;
 
   it('should create a User', async () => {
     const response = await request(app)
@@ -19,6 +20,8 @@ describe('Testing request recover password functions', () => {
         email,
         password: 'batma123',
       });
+
+    userId = response.body.id;
     expect(response.status).toBe(200);
   });
 
@@ -48,11 +51,20 @@ describe('Testing request recover password functions', () => {
       });
     expect(response.status).toBe(400);
   });
+
+  it('should delete a User', async () => {
+    const response = await request(app)
+      .delete(`/users/delete/${userId}`)
+      .send();
+
+    expect(response.status).toBe(200);
+  });
 });
 
 describe('Testing recover password functions', () => {
-  const username = 'restlesstest';
-  const email = 'restless-test@restless.com';
+  const username = 'recoverPassword';
+  const email = 'recoverPassword@restlessdevtools.com';
+  let userId;
 
   it('should create a User', async () => {
     const response = await request(app)
@@ -63,6 +75,8 @@ describe('Testing recover password functions', () => {
         email,
         password: 'batma123',
       });
+
+    userId = response.body.id;
     expect(response.status).toBe(200);
   });
 
@@ -94,6 +108,14 @@ describe('Testing recover password functions', () => {
       });
 
     expect(response.body.status).toBe(false);
+  });
+
+  it('should delete a User', async () => {
+    const response = await request(app)
+      .delete(`/users/delete/${userId}`)
+      .send();
+
+    expect(response.status).toBe(200);
   });
 });
 

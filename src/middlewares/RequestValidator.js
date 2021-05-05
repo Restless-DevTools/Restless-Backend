@@ -7,10 +7,12 @@ function RequestValidator(req, res, next) {
   const requestHeaderSchema = Joi.object().keys({
     name: Joi.string().required(),
     value: Joi.string().required(),
+    requestId: Joi.number(),
   });
   const requestQuerySchema = Joi.object().keys({
     name: Joi.string().required(),
     value: Joi.string().required(),
+    requestId: Joi.number(),
   });
   const schema = Joi.object().keys({
     name: Joi.string().required(),

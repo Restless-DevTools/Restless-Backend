@@ -23,4 +23,12 @@ export default class RequestHeaderRepository {
       },
     });
   }
+
+  deleteByRequestId(requestId) {
+    return this.db.destroy({
+      where: {
+        requestId,
+      },
+    });
+  }
 }

@@ -73,8 +73,8 @@ export default class RequestService {
       ]);
 
       dataValues.requestBody = requestBody;
-      dataValues.requestHeader = requestHeader;
-      dataValues.requestQuery = requestQuery;
+      dataValues.requestHeaders = requestHeader.map((headerQuery) => headerQuery.dataValues);
+      dataValues.requestQueries = requestQuery;
 
       return dataValues;
     } catch (error) {
@@ -102,13 +102,17 @@ export default class RequestService {
     };
 
     if (error) {
-      if (axiosRequest.response.data) {
-        response.size = Buffer.byteLength(JSON.stringify(axiosRequest.response.data), 'utf8');
+      if (axiosRequest.response) {
+        if (axiosRequest.response.data) {
+          response.size = Buffer.byteLength(JSON.stringify(axiosRequest.response.data), 'utf8');
+        }
+        response.status = axiosRequest.response.status;
+        response.statusText = axiosRequest.response.statusText;
+        response.data = axiosRequest.response.data;
+        response.contentType = axiosRequest.response.headers['content-type'];
+      } else {
+        console.log(axiosRequest);
       }
-      response.status = axiosRequest.response.status;
-      response.statusText = axiosRequest.response.statusText;
-      response.data = axiosRequest.response.data;
-      response.contentType = axiosRequest.response.headers['content-type'];
 
       return response;
     }
@@ -135,14 +139,18 @@ export default class RequestService {
       axiosObject.data = request.requestBody;
     }
 
-    if (request.requestHeader) {
-      axiosObject.headers = request.requestHeader.map((header) => (
-        { [header.name]: header.value }
-      ));
+    if (request.requestHeaders) {
+      const headers = {};
+
+      request.requestHeaders.forEach((header) => {
+        headers[header.name] = header.value;
+      });
+
+      axiosObject.headers = headers;
     }
 
-    if (request.requestQuery) {
-      axiosObject.params = request.requestQuery.map((query) => (
+    if (request.requestQueries) {
+      axiosObject.params = request.requestQueries.map((query) => (
         { [query.name]: query.value }));
     }
 
@@ -170,6 +178,12 @@ export default class RequestService {
           } else {
             await this.requestBodyRepository.create(request.requestBody);
           }
+        }
+
+        if (request.requestHeaders) {
+          await this.requestHeaderRepository.deleteByRequestId(requestId);
+          await Promise.all(request.requestHeaders
+            .map((header) => this.requestHeaderRepository.create(header)));
         }
 
         return this.executeRequest(editedRequest);

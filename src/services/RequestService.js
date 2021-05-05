@@ -1,3 +1,4 @@
+import axios from 'axios';
 import RequestBodyRepository from '../repositories/RequestBodyRepository';
 import RequestHeaderRepository from '../repositories/RequestHeaderRepository';
 import RequestQueryRepository from '../repositories/RequestQueryRepository';
@@ -58,8 +59,24 @@ export default class RequestService {
     return this.requestRepository.edit(paramsId, request);
   }
 
-  getRequest(id) {
-    return this.requestRepository.getRequest(id);
+  async getRequest(id) {
+    try {
+      const { dataValues } = await this.requestRepository.getRequest(id);
+
+      const [requestBody, requestHeader, requestQuery] = await Promise.all([
+        this.requestBodyRepository.getByRequestId(id),
+        this.requestHeaderRepository.getByRequestId(id),
+        this.requestQueryRepository.getByRequestId(id),
+      ]);
+
+      dataValues.requestBody = requestBody;
+      dataValues.requestHeader = requestHeader;
+      dataValues.requestQuery = requestQuery;
+
+      return dataValues;
+    } catch (error) {
+      return null;
+    }
   }
 
   async delete(id) {
@@ -72,5 +89,51 @@ export default class RequestService {
 
   async getRequestsByGroupId(groupId) {
     return this.requestRepository.getRequestsByGroupId(groupId);
+  }
+
+  async executeRequest(request) {
+    const axiosObject = {
+      method: request.method,
+      url: request.link,
+    };
+
+    if (request.requestBody) {
+      axiosObject.data = request.requestBody;
+    }
+
+    if (request.requestHeader) {
+      axiosObject.headers = request.requestHeader;
+    }
+
+    if (request.requestQuery) {
+      axiosObject.params = request.requestQuery;
+    }
+
+    const requestExecuted = await axios(axiosObject);
+
+    return this.responseService.create({
+      requestId: request.id,
+      status: requestExecuted.status,
+      body: requestExecuted,
+    });
+  }
+
+  async sendRequest(requestId, request) {
+    const storedRequest = await this.getRequest(requestId);
+    if (storedRequest) {
+      const editedRequest = await this.edit(requestId, request);
+
+      if (request.requestBody) {
+        if (request.requestBody.id) {
+          await this.requestBodyRepository.edit(request.requestBody.id, request.requestBody);
+        } else {
+          await this.requestBodyRepository.create(request.requestBody);
+        }
+      }
+
+      return editedRequest;
+    }
+
+    return { message: 'Request not found!', status: false };
   }
 }

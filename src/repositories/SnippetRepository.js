@@ -7,8 +7,12 @@ export default class SnippetRepository {
     this.Op = models.Sequelize.Op;
   }
 
-  getAllSnippets() {
-    return this.db.findAll();
+  getAllSnippets(user) {
+    return this.db.findAll({
+      where: {
+        userId: user.id,
+      },
+    });
   }
 
   async create(snippet) {
@@ -25,7 +29,7 @@ export default class SnippetRepository {
     return createdsnippet;
   }
 
-  async edit(paramsId, snippet) {
+  async edit(userId, paramsId, snippet) {
     await this.db.update({
       name: snippet.name,
       description: snippet.description,
@@ -38,23 +42,26 @@ export default class SnippetRepository {
     }, {
       where: {
         id: paramsId,
+        userId,
       },
     });
     return this.getSnippet(paramsId);
   }
 
-  getSnippet(paramsId) {
+  getSnippet(userId, paramsId) {
     return this.db.findOne({
       where: {
         id: paramsId,
+        userId,
       },
     });
   }
 
-  delete(paramsId) {
+  delete(userId, paramsId) {
     return this.db.destroy({
       where: {
         id: paramsId,
+        userId,
       },
     });
   }

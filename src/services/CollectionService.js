@@ -1,35 +1,53 @@
 import CollectionRepository from '../repositories/CollectionRepository';
+import UserService from './UserService';
 
 export default class CollectionService {
   constructor() {
     this.collectionRepository = new CollectionRepository();
+    this.userService = new UserService();
   }
 
-  getAllCollections() {
-    return this.collectionRepository.getAllCollections();
-  }
-
-  async create(collection) {
+  getAllCollections({ user }) {
     try {
-      return this.collectionRepository.create(collection);
-    } catch (err) {
-      return err;
+      return this.collectionRepository.getAllCollections({ id: user.id });
+    } catch (error) {
+      return { message: error.message, status: false };
     }
   }
 
-  edit(paramsId, collection) {
-    return this.collectionRepository.edit(paramsId, collection);
-  }
-
-  getCollection(id) {
-    return this.collectionRepository.getCollection(id);
-  }
-
-  async delete(id) {
-    const deletedCode = await this.collectionRepository.delete(id);
-    if (deletedCode === 1) {
-      return { message: 'Collection deleted successfully', status: true };
+  create({ user }, collection) {
+    try {
+      return this.collectionRepository.create({ ...collection, userId: user.id });
+    } catch (error) {
+      return { message: error.message, status: false };
     }
-    return { message: 'It was not possible to deleted', status: false };
+  }
+
+  edit({ user }, paramsId, collection) {
+    try {
+      return this.collectionRepository.edit(user.id, paramsId, collection);
+    } catch (error) {
+      return { message: error.message, status: false };
+    }
+  }
+
+  getCollection({ user }, collectionId) {
+    try {
+      return this.collectionRepository.getCollection(user.id, collectionId);
+    } catch (error) {
+      return { message: error.message, status: false };
+    }
+  }
+
+  async delete({ user }, collectionId) {
+    try {
+      const deletedCode = await this.collectionRepository.delete(user.id, collectionId);
+      if (deletedCode === 1) {
+        return { message: 'Collection deleted successfully', status: true };
+      }
+      return { message: 'It was not possible to deleted', status: false };
+    } catch (error) {
+      return { message: error.message, status: false };
+    }
   }
 }

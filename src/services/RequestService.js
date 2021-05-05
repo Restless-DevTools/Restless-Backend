@@ -12,13 +12,13 @@ export default class RequestService {
     this.requestQueryRepository = new RequestQueryRepository();
   }
 
-  getAllRequests() {
-    return this.requestRepository.getAllRequests();
+  getAllRequests({ user }) {
+    return this.requestRepository.getAllRequests({ id: user.id });
   }
 
-  async create(request) {
+  async create({ user }, request) {
     try {
-      const requestCreated = await this.requestRepository.create(request);
+      const requestCreated = await this.requestRepository.create({ ...request, userId: user.id });
       const relationedOperations = [];
 
       if (request.requestBody) {
@@ -54,16 +54,16 @@ export default class RequestService {
     }
   }
 
-  edit(paramsId, request) {
-    return this.requestRepository.edit(paramsId, request);
+  edit({ user }, paramsId, request) {
+    return this.requestRepository.edit(user.id, paramsId, request);
   }
 
-  getRequest(id) {
-    return this.requestRepository.getRequest(id);
+  getRequest({ user }, id) {
+    return this.requestRepository.getRequest(user.id, id);
   }
 
-  async delete(id) {
-    const deletedCode = await this.requestRepository.delete(id);
+  async delete({ user }, id) {
+    const deletedCode = await this.requestRepository.delete(user.id, id);
     if (deletedCode === 1) {
       return { message: 'Request deleted successfully', status: true };
     }

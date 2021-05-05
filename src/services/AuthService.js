@@ -41,6 +41,7 @@ export default class AuthService {
       status: true,
       username: user.username,
       name: user.name,
+      id: user.id,
     };
     const token = this.generateToken(userForToken);
     return { token, user: userForToken };

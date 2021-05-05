@@ -112,16 +112,26 @@ export default class RequestService {
       axiosObject.params = request.requestQuery;
     }
 
-    const requestExecuted = await axios(axiosObject);
-
-    return this.responseService.create({
-      requestId: request.id,
-      status: requestExecuted.status,
-      statusText: requestExecuted.statusText,
-      data: requestExecuted.data,
-      size: Buffer.byteLength(JSON.stringify(requestExecuted.data), 'utf8'),
-      contentType: requestExecuted.headers['content-type'],
-    });
+    try {
+      const requestExecuted = await axios(axiosObject);
+      return this.responseService.create({
+        requestId: request.id,
+        status: requestExecuted.status,
+        statusText: requestExecuted.statusText,
+        data: requestExecuted.data,
+        size: Buffer.byteLength(JSON.stringify(requestExecuted.data), 'utf8'),
+        contentType: requestExecuted.headers['content-type'],
+      });
+    } catch (erroredRequest) {
+      return this.responseService.create({
+        requestId: request.id,
+        status: erroredRequest.response.status,
+        statusText: erroredRequest.response.statusText,
+        data: erroredRequest.response.data,
+        size: erroredRequest.response.data ? Buffer.byteLength(JSON.stringify(erroredRequest.response.data), 'utf8') : 0,
+        contentType: erroredRequest.response.headers['content-type'],
+      });
+    }
   }
 
   async sendRequest(requestId, request) {

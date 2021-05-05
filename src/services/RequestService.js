@@ -176,11 +176,8 @@ export default class RequestService {
       const storedRequest = await this.getRequest(requestId);
       if (storedRequest) {
         if (request.requestBody) {
-          if (request.requestBody.id) {
-            await this.requestBodyRepository.edit(request.requestBody.id, request.requestBody);
-          } else {
-            await this.requestBodyRepository.create({ ...request.requestBody, requestId });
-          }
+          await this.requestBodyRepository.deleteByRequestId(requestId);
+          await this.requestBodyRepository.create({ ...request.requestBody, requestId });
         }
 
         if (request.requestHeaders) {

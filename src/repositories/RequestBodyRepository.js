@@ -22,4 +22,12 @@ export default class RequestBodyRepository {
       },
     });
   }
+
+  deleteByRequestId(requestId) {
+    return this.db.destroy({
+      where: {
+        requestId,
+      },
+    });
+  }
 }

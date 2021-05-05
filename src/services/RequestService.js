@@ -135,8 +135,13 @@ export default class RequestService {
       url: request.link,
     };
 
-    if (request.requestBody) {
-      axiosObject.data = request.requestBody;
+    if (request.requestBody && request.requestBody.dataValues) {
+      try {
+        const parsedJson = JSON.parse(request.requestBody.dataValues.body);
+        axiosObject.data = parsedJson;
+      } catch (error) {
+        return { message: 'Invalid JSON', status: false };
+      }
     }
 
     if (request.requestHeaders) {
@@ -170,13 +175,11 @@ export default class RequestService {
     try {
       const storedRequest = await this.getRequest(requestId);
       if (storedRequest) {
-        const editedRequest = await this.edit(requestId, request);
-
         if (request.requestBody) {
           if (request.requestBody.id) {
             await this.requestBodyRepository.edit(request.requestBody.id, request.requestBody);
           } else {
-            await this.requestBodyRepository.create(request.requestBody);
+            await this.requestBodyRepository.create({ ...request.requestBody, requestId });
           }
         }
 
@@ -186,6 +189,7 @@ export default class RequestService {
             .map((header) => this.requestHeaderRepository.create(header)));
         }
 
+        const editedRequest = await this.edit(requestId, request);
         return this.executeRequest(editedRequest);
       }
 

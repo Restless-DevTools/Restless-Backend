@@ -5,8 +5,10 @@ export default class Response extends Model {
     return super.init(
       {
         status: { type: DataTypes.INTEGER },
-        value: { type: DataTypes.STRING },
-        body: { type: DataTypes.JSONB },
+        statusText: { type: DataTypes.STRING },
+        data: { type: DataTypes.JSONB },
+        contentType: { type: DataTypes.STRING },
+        size: { type: DataTypes.DECIMAL(10, 4) },
       },
       { tableName: 'response', sequelize, underscored: true },
     );

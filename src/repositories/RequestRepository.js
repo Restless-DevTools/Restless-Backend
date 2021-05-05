@@ -25,7 +25,7 @@ export default class RequestRepository {
   }
 
   async edit(paramsId, request) {
-    await this.db.update({
+    return this.db.update({
       link: request.link,
       method: request.method,
       name: request.name,
@@ -38,7 +38,6 @@ export default class RequestRepository {
         id: paramsId,
       },
     });
-    return this.getRequest(paramsId);
   }
 
   getRequest(paramsId) {

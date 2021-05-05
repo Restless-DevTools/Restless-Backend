@@ -10,9 +10,11 @@ export default class ResponseRepository {
   async create(response) {
     const createdresponse = await this.db.create({
       status: response.status,
-      value: response.value,
-      body: response.body,
+      statusText: response.statusText,
+      data: response.data,
       requestId: response.requestId,
+      contentType: response.contentType,
+      size: response.size, // bytes
     });
     return createdresponse;
   }
@@ -20,9 +22,11 @@ export default class ResponseRepository {
   async edit(paramsId, response) {
     await this.db.update({
       status: response.status,
-      value: response.value,
-      body: response.body,
+      statusText: response.statusText,
+      data: response.data,
       requestId: response.requestId,
+      contentType: response.contentType,
+      size: response.size, // bytes
     }, {
       where: {
         id: paramsId,

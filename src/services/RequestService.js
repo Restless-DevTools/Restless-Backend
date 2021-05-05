@@ -4,6 +4,7 @@ import RequestHeaderRepository from '../repositories/RequestHeaderRepository';
 import RequestQueryRepository from '../repositories/RequestQueryRepository';
 import RequestRepository from '../repositories/RequestRepository';
 import Logger from '../helpers/Logger';
+import ResponseService from './ResponseService';
 
 export default class RequestService {
   constructor() {
@@ -11,6 +12,7 @@ export default class RequestService {
     this.requestBodyRepository = new RequestBodyRepository();
     this.requestHeaderRepository = new RequestHeaderRepository();
     this.requestQueryRepository = new RequestQueryRepository();
+    this.responseService = new ResponseService();
   }
 
   getAllRequests() {
@@ -55,8 +57,9 @@ export default class RequestService {
     }
   }
 
-  edit(paramsId, request) {
-    return this.requestRepository.edit(paramsId, request);
+  async edit(paramsId, request) {
+    await this.requestRepository.edit(paramsId, request);
+    return this.getRequest(paramsId);
   }
 
   async getRequest(id) {
@@ -114,26 +117,34 @@ export default class RequestService {
     return this.responseService.create({
       requestId: request.id,
       status: requestExecuted.status,
-      body: requestExecuted,
+      statusText: requestExecuted.statusText,
+      data: requestExecuted.data,
+      size: Buffer.byteLength(JSON.stringify(requestExecuted.data), 'utf8'),
+      contentType: requestExecuted.headers['content-type'],
     });
   }
 
   async sendRequest(requestId, request) {
-    const storedRequest = await this.getRequest(requestId);
-    if (storedRequest) {
-      const editedRequest = await this.edit(requestId, request);
+    try {
+      const storedRequest = await this.getRequest(requestId);
+      if (storedRequest) {
+        const editedRequest = await this.edit(requestId, request);
 
-      if (request.requestBody) {
-        if (request.requestBody.id) {
-          await this.requestBodyRepository.edit(request.requestBody.id, request.requestBody);
-        } else {
-          await this.requestBodyRepository.create(request.requestBody);
+        if (request.requestBody) {
+          if (request.requestBody.id) {
+            await this.requestBodyRepository.edit(request.requestBody.id, request.requestBody);
+          } else {
+            await this.requestBodyRepository.create(request.requestBody);
+          }
         }
+
+        return this.executeRequest(editedRequest);
       }
 
-      return editedRequest;
+      return { message: 'Request not found!', status: false };
+    } catch (error) {
+      Logger.printError(error);
+      return { message: 'Something went wrong', status: false };
     }
-
-    return { message: 'Request not found!', status: false };
   }
 }

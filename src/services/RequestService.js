@@ -136,11 +136,14 @@ export default class RequestService {
     }
 
     if (request.requestHeader) {
-      axiosObject.headers = request.requestHeader;
+      axiosObject.headers = request.requestHeader.map((header) => (
+        { [header.name]: header.value }
+      ));
     }
 
     if (request.requestQuery) {
-      axiosObject.params = request.requestQuery;
+      axiosObject.params = request.requestQuery.map((query) => (
+        { [query.name]: query.value }));
     }
 
     try {
@@ -149,7 +152,6 @@ export default class RequestService {
         request, requestExecuted, false,
       ));
     } catch (erroredRequest) {
-      console.log(erroredRequest);
       return this.responseService.create(this.extractInfoFromAxios(
         request, erroredRequest, true,
       ));

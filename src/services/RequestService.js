@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { differenceInMilliseconds } from 'date-fns';
 import RequestBodyRepository from '../repositories/RequestBodyRepository';
 import RequestHeaderRepository from '../repositories/RequestHeaderRepository';
 import RequestQueryRepository from '../repositories/RequestQueryRepository';
@@ -95,10 +96,12 @@ export default class RequestService {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  extractInfoFromAxios(request, axiosRequest, error) {
+  extractInfoFromAxios(request, axiosRequest, error, times) {
     const response = {
       requestId: request.id,
       size: 0,
+      allTransactionTime: differenceInMilliseconds(times.executeEndTime, times.startTime),
+      requestTime: differenceInMilliseconds(times.executeEndTime, times.executeStartTime),
     };
 
     if (error) {
@@ -111,7 +114,7 @@ export default class RequestService {
         response.data = axiosRequest.response.data;
         response.contentType = axiosRequest.response.headers['content-type'];
       } else {
-        console.log(axiosRequest);
+        return { message: 'Could not execute request', status: false };
       }
 
       return response;
@@ -129,7 +132,8 @@ export default class RequestService {
     return response;
   }
 
-  async executeRequest(request) {
+  async executeRequest(request, startTime) {
+    const times = { startTime: new Date(startTime) };
     const axiosObject = {
       method: request.method,
       url: request.link,
@@ -159,10 +163,13 @@ export default class RequestService {
         { [query.name]: query.value }));
     }
 
+    times.executeStartTime = new Date();
+
     try {
       const requestExecuted = await axios(axiosObject);
+      times.executeEndTime = new Date();
       return this.responseService.create(this.extractInfoFromAxios(
-        request, requestExecuted, false,
+        request, requestExecuted, false, times,
       ));
     } catch (erroredRequest) {
       return this.responseService.create(this.extractInfoFromAxios(
@@ -187,7 +194,7 @@ export default class RequestService {
         }
 
         const editedRequest = await this.edit(requestId, request);
-        return this.executeRequest(editedRequest);
+        return this.executeRequest(editedRequest, request.startTime);
       }
 
       return { message: 'Request not found!', status: false };

@@ -8,7 +8,9 @@ export default class Response extends Model {
         statusText: { type: DataTypes.STRING },
         data: { type: DataTypes.JSONB },
         contentType: { type: DataTypes.STRING },
-        size: { type: DataTypes.DECIMAL(10, 4) },
+        size: { type: DataTypes.DECIMAL(10, 4) }, // bytes
+        allTransactionTime: { type: DataTypes.INTEGER }, // miliseconds
+        requestTime: { type: DataTypes.INTEGER }, // miliseconds
       },
       { tableName: 'response', sequelize, underscored: true },
     );

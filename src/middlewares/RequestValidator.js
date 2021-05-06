@@ -26,6 +26,7 @@ function RequestValidator(req, res, next) {
     requestBody: requestBodySchema,
     requestHeaders: Joi.array().items(requestHeaderSchema),
     requestQueries: Joi.array().items(requestQuerySchema),
+    startTime: Joi.date(),
   });
   const result = Joi.validate(req.body, schema);
   if (result.error === null) {

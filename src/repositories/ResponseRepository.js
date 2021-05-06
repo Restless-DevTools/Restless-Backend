@@ -15,6 +15,8 @@ export default class ResponseRepository {
       requestId: response.requestId,
       contentType: response.contentType,
       size: response.size, // bytes
+      allTransactionTime: response.allTransactionTime,
+      requestTime: response.requestTime,
     });
     return createdresponse;
   }
@@ -27,6 +29,8 @@ export default class ResponseRepository {
       requestId: response.requestId,
       contentType: response.contentType,
       size: response.size, // bytes
+      allTransactionTime: response.allTransactionTime,
+      requestTime: response.requestTime,
     }, {
       where: {
         id: paramsId,

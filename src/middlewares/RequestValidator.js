@@ -2,6 +2,7 @@ import Joi from 'joi';
 
 function RequestValidator(req, res, next) {
   const requestBodySchema = Joi.object().keys({
+    id: Joi.number(),
     body: Joi.object(),
   });
   const requestHeaderSchema = Joi.object().keys({

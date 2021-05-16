@@ -17,6 +17,7 @@ export default class ResponseRepository {
       size: response.size, // bytes
       allTransactionTime: response.allTransactionTime,
       requestTime: response.requestTime,
+      headers: response.headers,
     });
     return createdresponse;
   }

@@ -97,39 +97,46 @@ export default class RequestService {
 
   // eslint-disable-next-line class-methods-use-this
   extractInfoFromAxios(request, axiosRequest, error, times) {
-    const response = {
-      requestId: request.id,
-      size: 0,
-      allTransactionTime: differenceInMilliseconds(times.executeEndTime, times.startTime),
-      requestTime: differenceInMilliseconds(times.executeEndTime, times.executeStartTime),
-    };
+    try {
+      const response = {
+        requestId: request.id,
+        size: 0,
+        allTransactionTime: differenceInMilliseconds(times.executeEndTime, times.startTime),
+        requestTime: differenceInMilliseconds(times.executeEndTime, times.executeStartTime),
+      };
 
-    if (error) {
-      if (axiosRequest.response) {
-        if (axiosRequest.response.data) {
-          response.size = Buffer.byteLength(JSON.stringify(axiosRequest.response.data), 'utf8');
+      if (error) {
+        if (axiosRequest.response) {
+          if (axiosRequest.response.data) {
+            response.size = Buffer.byteLength(JSON.stringify(axiosRequest.response.data), 'utf8');
+          }
+          response.status = axiosRequest.response.status;
+          response.statusText = axiosRequest.response.statusText;
+          response.data = axiosRequest.response.data;
+          response.contentType = axiosRequest.response.headers['content-type'];
+          response.headers = JSON.stringify(axiosRequest.response.headers);
+        } else {
+          return { message: 'Could not execute request', status: false };
         }
-        response.status = axiosRequest.response.status;
-        response.statusText = axiosRequest.response.statusText;
-        response.data = axiosRequest.response.data;
-        response.contentType = axiosRequest.response.headers['content-type'];
-      } else {
-        return { message: 'Could not execute request', status: false };
+
+        return response;
       }
 
+      if (axiosRequest.data) {
+        response.size = Buffer.byteLength(JSON.stringify(axiosRequest.data), 'utf8');
+      }
+
+      response.status = axiosRequest.status;
+      response.statusText = axiosRequest.statusText;
+      response.data = axiosRequest.data;
+      response.contentType = axiosRequest.headers['content-type'];
+      response.headers = JSON.stringify(axiosRequest.headers);
+
       return response;
+    } catch (err) {
+      Logger.printError(err);
+      return {};
     }
-
-    if (axiosRequest.data) {
-      response.size = Buffer.byteLength(JSON.stringify(axiosRequest.data), 'utf8');
-    }
-
-    response.status = axiosRequest.status;
-    response.statusText = axiosRequest.statusText;
-    response.data = axiosRequest.data;
-    response.contentType = axiosRequest.headers['content-type'];
-
-    return response;
   }
 
   async executeRequest(request, startTime) {
@@ -164,7 +171,6 @@ export default class RequestService {
     }
 
     times.executeStartTime = new Date();
-
     try {
       const requestExecuted = await axios(axiosObject);
       times.executeEndTime = new Date();
@@ -172,8 +178,9 @@ export default class RequestService {
         request, requestExecuted, false, times,
       ));
     } catch (erroredRequest) {
+      times.executeEndTime = new Date();
       return this.responseService.create(this.extractInfoFromAxios(
-        request, erroredRequest, true,
+        request, erroredRequest, true, times,
       ));
     }
   }

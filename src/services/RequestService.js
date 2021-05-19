@@ -58,9 +58,8 @@ export default class RequestService {
     }
   }
 
-  async edit({ user }, paramsId, request) {
-    await this.requestRepository.edit(user.id, paramsId, request);
-    return this.getRequest(paramsId);
+  edit({ user }, paramsId, request) {
+    return this.requestRepository.edit(user.id, paramsId, request);
   }
 
   async getRequest({ user }, id) {
@@ -185,9 +184,9 @@ export default class RequestService {
     }
   }
 
-  async sendRequest(requestId, request) {
+  async sendRequest(user, requestId, request) {
     try {
-      const storedRequest = await this.getRequest(requestId);
+      const storedRequest = await this.getRequest(user, requestId);
       if (storedRequest) {
         if (request.requestBody) {
           await this.requestBodyRepository.deleteByRequestId(requestId);
@@ -200,7 +199,7 @@ export default class RequestService {
             .map((header) => this.requestHeaderRepository.create(header)));
         }
 
-        const editedRequest = await this.edit(requestId, request);
+        const editedRequest = await this.edit(user, requestId, request);
         return this.executeRequest(editedRequest, request.startTime);
       }
 

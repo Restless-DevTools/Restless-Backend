@@ -31,7 +31,7 @@ export default new class RequestController {
   }
 
   async sendRequest(req, res) {
-    const request = await this.requestService.sendRequest(req.params.id, req.body);
+    const request = await this.requestService.sendRequest(req.user, req.params.id, req.body);
     return res.send(request);
   }
 }();

@@ -9,10 +9,11 @@ export default class TeamService {
     this.userService = new UserService();
   }
 
-  async getAllTeams() {
-    const teams = await this.teamRepository.getAllTeams();
+  async getAllTeams({ user }) {
+    const teams = await this.teamRepository.getAllTeams({ userId: user.id });
+
     const teamsWithIntegrants = await Promise.all(teams.map(async (team) => {
-      const teamComplete = { ...team.dataValues };
+      const teamComplete = { ...team };
       teamComplete.integrants = await this.getTeamIntegrants(team.id);
       return teamComplete;
     }));
@@ -20,12 +21,18 @@ export default class TeamService {
     return teamsWithIntegrants;
   }
 
-  async create(team) {
+  async create({ user }, team) {
     try {
       const teamCreated = await this.teamRepository.create(team);
       if (team.integrants && team.integrants.length) {
         team.integrants.forEach((integrant) => {
-          this.userTeamRepository.create({ teamId: teamCreated.id, userId: integrant.userId });
+          const role = (user.id === integrant.userId) ? 'admin' : undefined;
+
+          this.userTeamRepository.create({
+            teamId: teamCreated.id,
+            userId: integrant.userId,
+            role,
+          });
         });
       }
 

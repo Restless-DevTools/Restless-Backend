@@ -6,12 +6,12 @@ export default new class TeamController {
   }
 
   getAllTeams(req, res) {
-    return this.teamService.getAllTeams()
+    return this.teamService.getAllTeams(req.user)
       .then((teams) => res.send(teams));
   }
 
   async create(req, res) {
-    const model = await this.teamService.create(req.body);
+    const model = await this.teamService.create(req.user, req.body);
     return res.send(model);
   }
 

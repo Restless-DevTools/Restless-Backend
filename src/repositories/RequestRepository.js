@@ -7,8 +7,12 @@ export default class RequestRepository {
     this.Op = models.Sequelize.Op;
   }
 
-  getAllRequests() {
-    return this.db.findAll();
+  getAllRequests(user) {
+    return this.db.findAll({
+      where: {
+        userId: user.id,
+      },
+    });
   }
 
   async create(request) {
@@ -24,8 +28,8 @@ export default class RequestRepository {
     return createdRequest;
   }
 
-  async edit(paramsId, request) {
-    return this.db.update({
+  async edit(userId, paramsId, request) {
+    await this.db.update({
       link: request.link,
       method: request.method,
       name: request.name,
@@ -36,22 +40,26 @@ export default class RequestRepository {
     }, {
       where: {
         id: paramsId,
+        userId,
       },
     });
+    return this.getRequest(userId, paramsId);
   }
 
-  getRequest(paramsId) {
+  getRequest(userId, paramsId) {
     return this.db.findOne({
       where: {
         id: paramsId,
+        userId,
       },
     });
   }
 
-  delete(paramsId) {
+  delete(userId, paramsId) {
     return this.db.destroy({
       where: {
         id: paramsId,
+        userId,
       },
     });
   }

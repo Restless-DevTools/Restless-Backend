@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { differenceInMilliseconds } from 'date-fns';
+import Logger from '../helpers/Logger';
 import RequestBodyRepository from '../repositories/RequestBodyRepository';
 import RequestHeaderRepository from '../repositories/RequestHeaderRepository';
 import RequestQueryRepository from '../repositories/RequestQueryRepository';
 import RequestRepository from '../repositories/RequestRepository';
-import Logger from '../helpers/Logger';
 import ResponseService from './ResponseService';
 
 export default class RequestService {
@@ -16,13 +16,13 @@ export default class RequestService {
     this.responseService = new ResponseService();
   }
 
-  getAllRequests() {
-    return this.requestRepository.getAllRequests();
+  getAllRequests({ user }) {
+    return this.requestRepository.getAllRequests({ id: user.id });
   }
 
-  async create(request) {
+  async create({ user }, request) {
     try {
-      const requestCreated = await this.requestRepository.create(request);
+      const requestCreated = await this.requestRepository.create({ ...request, userId: user.id });
       const relationedOperations = [];
 
       if (request.requestBody) {
@@ -58,14 +58,13 @@ export default class RequestService {
     }
   }
 
-  async edit(paramsId, request) {
-    await this.requestRepository.edit(paramsId, request);
-    return this.getRequest(paramsId);
+  edit({ user }, paramsId, request) {
+    return this.requestRepository.edit(user.id, paramsId, request);
   }
 
-  async getRequest(id) {
+  async getRequest({ user }, id) {
     try {
-      const { dataValues } = await this.requestRepository.getRequest(id);
+      const { dataValues } = await this.requestRepository.getRequest(user.id, id);
 
       const [requestBody, requestHeader, requestQuery] = await Promise.all([
         this.requestBodyRepository.getByRequestId(id),
@@ -83,8 +82,8 @@ export default class RequestService {
     }
   }
 
-  async delete(id) {
-    const deletedCode = await this.requestRepository.delete(id);
+  async delete({ user }, id) {
+    const deletedCode = await this.requestRepository.delete(user.id, id);
     if (deletedCode === 1) {
       return { message: 'Request deleted successfully', status: true };
     }
@@ -185,9 +184,9 @@ export default class RequestService {
     }
   }
 
-  async sendRequest(requestId, request) {
+  async sendRequest(user, requestId, request) {
     try {
-      const storedRequest = await this.getRequest(requestId);
+      const storedRequest = await this.getRequest(user, requestId);
       if (storedRequest) {
         if (request.requestBody) {
           await this.requestBodyRepository.deleteByRequestId(requestId);
@@ -200,7 +199,7 @@ export default class RequestService {
             .map((header) => this.requestHeaderRepository.create(header)));
         }
 
-        const editedRequest = await this.edit(requestId, request);
+        const editedRequest = await this.edit(user, requestId, request);
         return this.executeRequest(editedRequest, request.startTime);
       }
 

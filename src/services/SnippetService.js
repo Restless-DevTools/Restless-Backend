@@ -5,28 +5,28 @@ export default class SnippetService {
     this.snippetRepository = new SnippetRepository();
   }
 
-  getAllSnippets() {
-    return this.snippetRepository.getAllSnippets();
+  getAllSnippets({ user }) {
+    return this.snippetRepository.getAllSnippets({ id: user.id });
   }
 
-  async create(snippet) {
+  async create({ user }, snippet) {
     try {
-      return this.snippetRepository.create(snippet);
+      return this.snippetRepository.create({ ...snippet, userId: user.id });
     } catch (err) {
       return err;
     }
   }
 
-  edit(paramsId, snippet) {
-    return this.snippetRepository.edit(paramsId, snippet);
+  edit({ user }, paramsId, snippet) {
+    return this.snippetRepository.edit(user.id, paramsId, snippet);
   }
 
-  getSnippet(id) {
-    return this.snippetRepository.getSnippet(id);
+  getSnippet({ user }, id) {
+    return this.snippetRepository.getSnippet(user.id, id);
   }
 
-  async delete(id) {
-    const deletedCode = await this.snippetRepository.delete(id);
+  async delete({ user }, id) {
+    const deletedCode = await this.snippetRepository.delete(user.id, id);
     if (deletedCode === 1) {
       return { message: 'Snippet deleted successfully', status: true };
     }

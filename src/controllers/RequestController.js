@@ -11,27 +11,27 @@ export default new class RequestController {
   }
 
   async create(req, res) {
-    const model = await this.requestService.create(req.body);
+    const model = await this.requestService.create(req.user, req.body);
     return res.send(model);
   }
 
   async edit(req, res) {
-    const model = await this.requestService.edit(req.params.id, req.body);
+    const model = await this.requestService.edit(req.user, req.params.id, req.body);
     return res.send(model);
   }
 
   getRequest(req, res) {
-    return this.requestService.getRequest(req.params.id)
+    return this.requestService.getRequest(req.user, req.params.id)
       .then((snippet) => res.send(snippet));
   }
 
   async delete(req, res) {
-    const status = await this.requestService.delete(req.params.id);
+    const status = await this.requestService.delete(req.user, req.params.id);
     return res.send(status);
   }
 
   async sendRequest(req, res) {
-    const request = await this.requestService.sendRequest(req.params.id, req.body);
+    const request = await this.requestService.sendRequest(req.user, req.params.id, req.body);
     return res.send(request);
   }
 }();

@@ -7,8 +7,12 @@ export default class CollectionRepository {
     this.Op = models.Sequelize.Op;
   }
 
-  getAllCollections() {
-    return this.db.findAll();
+  getAllCollections(user) {
+    return this.db.findAll({
+      where: {
+        userId: user.id,
+      },
+    });
   }
 
   async create(collection) {
@@ -16,35 +20,40 @@ export default class CollectionRepository {
       name: collection.name,
       permissionType: collection.permissionType,
       description: collection.description,
+      userId: collection.userId,
     });
     return createdCollection;
   }
 
-  async edit(paramsId, collection) {
+  async edit(userId, paramsId, collection) {
     await this.db.update({
       name: collection.name,
       permissionType: collection.permissionType,
       description: collection.description,
+      userId: collection.userId,
     }, {
       where: {
         id: paramsId,
+        userId,
       },
     });
-    return this.getCollection(paramsId);
+    return this.getCollection(userId, paramsId);
   }
 
-  getCollection(paramsId) {
+  getCollection(userId, paramsId) {
     return this.db.findOne({
       where: {
         id: paramsId,
+        userId,
       },
     });
   }
 
-  delete(paramsId) {
+  delete(userId, paramsId) {
     return this.db.destroy({
       where: {
         id: paramsId,
+        userId,
       },
     });
   }

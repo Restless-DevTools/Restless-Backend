@@ -7,8 +7,23 @@ export default class TeamRepository {
     this.Op = models.Sequelize.Op;
   }
 
-  getAllTeams() {
-    return this.db.findAll();
+  async getAllTeams(user) {
+    const query = [];
+    const replacements = {
+      userId: user.userId,
+    };
+
+    query.push('SELECT t.id, t.name, t.description, t.created_at, t.updated_at');
+    query.push('FROM team t');
+    query.push('JOIN user_team ut on (ut.team_id = t.id)');
+    query.push('WHERE ut.user_id = :userId');
+
+    const result = await this.sequelize.query(query.join(' '),
+      {
+        replacements,
+        type: this.sequelize.QueryTypes.SELECT,
+      });
+    return result;
   }
 
   async create(team) {

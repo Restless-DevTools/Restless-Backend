@@ -112,7 +112,7 @@ export default class RequestService {
           }
           response.status = axiosRequest.response.status;
           response.statusText = axiosRequest.response.statusText;
-          response.data = axiosRequest.response.data;
+          response.data = JSON.parse(axiosRequest.response.data);
           response.contentType = axiosRequest.response.headers['content-type'];
           response.headers = JSON.stringify(axiosRequest.response.headers);
         } else {
@@ -128,7 +128,7 @@ export default class RequestService {
 
       response.status = axiosRequest.status;
       response.statusText = axiosRequest.statusText;
-      response.data = axiosRequest.data;
+      response.data = JSON.stringify(axiosRequest.data);
       response.contentType = axiosRequest.headers['content-type'];
       response.headers = JSON.stringify(axiosRequest.headers);
 

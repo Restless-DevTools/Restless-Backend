@@ -10,5 +10,8 @@ export default async function RequestsRoutes(router) {
     (req, res) => RequestController.edit(req, res));
   router.get('/requests/show/:id', (req, res) => RequestController.getRequest(req, res));
   router.delete('/requests/delete/:id', (req, res) => RequestController.delete(req, res));
+  router.post('/requests/send/:id',
+    (req, res, next) => RequestValidator.RequestValidator(req, res, next),
+    (req, res) => RequestController.sendRequest(req, res));
   return router;
 }

@@ -199,8 +199,10 @@ export default class RequestService {
             .map((header) => this.requestHeaderRepository.create(header)));
         }
 
-        const editedRequest = await this.edit(user, requestId, request);
-        return this.executeRequest(editedRequest, request.startTime);
+        await this.edit(user, requestId, request);
+        const completeRequest = await this.getRequest(user, requestId);
+
+        return this.executeRequest(completeRequest, request.startTime);
       }
 
       return { message: 'Request not found!', status: false };

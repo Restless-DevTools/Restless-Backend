@@ -15,8 +15,36 @@ export default class RequestBodyRepository {
     return createdRequest;
   }
 
+  async edit(paramsId, requestBody) {
+    await this.db.update({
+      body: requestBody.body,
+      requestId: requestBody.requestId,
+    }, {
+      where: {
+        id: paramsId,
+      },
+    });
+    return this.getRequestBody(paramsId);
+  }
+
+  getRequestBody(paramsId) {
+    return this.db.findOne({
+      where: {
+        id: paramsId,
+      },
+    });
+  }
+
   getByRequestId(requestId) {
     return this.db.findOne({
+      where: {
+        requestId,
+      },
+    });
+  }
+
+  deleteByRequestId(requestId) {
+    return this.db.destroy({
       where: {
         requestId,
       },

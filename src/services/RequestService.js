@@ -1,8 +1,11 @@
+import axios from 'axios';
+import { differenceInMilliseconds } from 'date-fns';
+import Logger from '../helpers/Logger';
 import RequestBodyRepository from '../repositories/RequestBodyRepository';
 import RequestHeaderRepository from '../repositories/RequestHeaderRepository';
 import RequestQueryRepository from '../repositories/RequestQueryRepository';
 import RequestRepository from '../repositories/RequestRepository';
-import Logger from '../helpers/Logger';
+import ResponseService from './ResponseService';
 
 export default class RequestService {
   constructor() {
@@ -10,6 +13,7 @@ export default class RequestService {
     this.requestBodyRepository = new RequestBodyRepository();
     this.requestHeaderRepository = new RequestHeaderRepository();
     this.requestQueryRepository = new RequestQueryRepository();
+    this.responseService = new ResponseService();
   }
 
   getAllRequests({ user }) {
@@ -54,12 +58,29 @@ export default class RequestService {
     }
   }
 
-  edit({ user }, paramsId, request) {
-    return this.requestRepository.edit(user.id, paramsId, request);
+  async edit({ user }, paramsId, request) {
+    await this.requestRepository.edit(user.id, paramsId, request);
+    return this.getRequest(paramsId);
   }
 
-  getRequest({ user }, id) {
-    return this.requestRepository.getRequest(user.id, id);
+  async getRequest({ user }, id) {
+    try {
+      const { dataValues } = await this.requestRepository.getRequest(user.id, id);
+
+      const [requestBody, requestHeader, requestQuery] = await Promise.all([
+        this.requestBodyRepository.getByRequestId(id),
+        this.requestHeaderRepository.getByRequestId(id),
+        this.requestQueryRepository.getByRequestId(id),
+      ]);
+
+      dataValues.requestBody = requestBody;
+      dataValues.requestHeaders = requestHeader.map((headerQuery) => headerQuery.dataValues);
+      dataValues.requestQueries = requestQuery;
+
+      return dataValues;
+    } catch (error) {
+      return null;
+    }
   }
 
   async delete({ user }, id) {
@@ -72,5 +93,121 @@ export default class RequestService {
 
   async getRequestsByGroupId(groupId) {
     return this.requestRepository.getRequestsByGroupId(groupId);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  extractInfoFromAxios(request, axiosRequest, error, times) {
+    try {
+      const response = {
+        requestId: request.id,
+        size: 0,
+        allTransactionTime: differenceInMilliseconds(times.executeEndTime, times.startTime),
+        requestTime: differenceInMilliseconds(times.executeEndTime, times.executeStartTime),
+      };
+
+      if (error) {
+        if (axiosRequest.response) {
+          if (axiosRequest.response.data) {
+            response.size = Buffer.byteLength(JSON.stringify(axiosRequest.response.data), 'utf8');
+          }
+          response.status = axiosRequest.response.status;
+          response.statusText = axiosRequest.response.statusText;
+          response.data = axiosRequest.response.data;
+          response.contentType = axiosRequest.response.headers['content-type'];
+          response.headers = JSON.stringify(axiosRequest.response.headers);
+        } else {
+          return { message: 'Could not execute request', status: false };
+        }
+
+        return response;
+      }
+
+      if (axiosRequest.data) {
+        response.size = Buffer.byteLength(JSON.stringify(axiosRequest.data), 'utf8');
+      }
+
+      response.status = axiosRequest.status;
+      response.statusText = axiosRequest.statusText;
+      response.data = axiosRequest.data;
+      response.contentType = axiosRequest.headers['content-type'];
+      response.headers = JSON.stringify(axiosRequest.headers);
+
+      return response;
+    } catch (err) {
+      Logger.printError(err);
+      return {};
+    }
+  }
+
+  async executeRequest(request, startTime) {
+    const times = { startTime: new Date(startTime) };
+    const axiosObject = {
+      method: request.method,
+      url: request.link,
+    };
+
+    if (request.requestBody && request.requestBody.dataValues) {
+      try {
+        const parsedJson = JSON.parse(request.requestBody.dataValues.body);
+        axiosObject.data = parsedJson;
+      } catch (error) {
+        return { message: 'Invalid JSON', status: false };
+      }
+    }
+
+    if (request.requestHeaders) {
+      const headers = {};
+
+      request.requestHeaders.forEach((header) => {
+        headers[header.name] = header.value;
+      });
+
+      axiosObject.headers = headers;
+    }
+
+    if (request.requestQueries) {
+      axiosObject.params = request.requestQueries.map((query) => (
+        { [query.name]: query.value }));
+    }
+
+    times.executeStartTime = new Date();
+    try {
+      const requestExecuted = await axios(axiosObject);
+      times.executeEndTime = new Date();
+      return this.responseService.create(this.extractInfoFromAxios(
+        request, requestExecuted, false, times,
+      ));
+    } catch (erroredRequest) {
+      times.executeEndTime = new Date();
+      return this.responseService.create(this.extractInfoFromAxios(
+        request, erroredRequest, true, times,
+      ));
+    }
+  }
+
+  async sendRequest(requestId, request) {
+    try {
+      const storedRequest = await this.getRequest(requestId);
+      if (storedRequest) {
+        if (request.requestBody) {
+          await this.requestBodyRepository.deleteByRequestId(requestId);
+          await this.requestBodyRepository.create({ ...request.requestBody, requestId });
+        }
+
+        if (request.requestHeaders) {
+          await this.requestHeaderRepository.deleteByRequestId(requestId);
+          await Promise.all(request.requestHeaders
+            .map((header) => this.requestHeaderRepository.create(header)));
+        }
+
+        const editedRequest = await this.edit(requestId, request);
+        return this.executeRequest(editedRequest, request.startTime);
+      }
+
+      return { message: 'Request not found!', status: false };
+    } catch (error) {
+      Logger.printError(error);
+      return { message: 'Something went wrong', status: false };
+    }
   }
 }

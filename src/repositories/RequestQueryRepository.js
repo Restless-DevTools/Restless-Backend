@@ -17,7 +17,7 @@ export default class RequestQueryRepository {
   }
 
   getByRequestId(requestId) {
-    return this.db.findOne({
+    return this.db.findAll({
       where: {
         requestId,
       },

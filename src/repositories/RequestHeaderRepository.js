@@ -17,7 +17,15 @@ export default class RequestHeaderRepository {
   }
 
   getByRequestId(requestId) {
-    return this.db.findOne({
+    return this.db.findAll({
+      where: {
+        requestId,
+      },
+    });
+  }
+
+  deleteByRequestId(requestId) {
+    return this.db.destroy({
       where: {
         requestId,
       },

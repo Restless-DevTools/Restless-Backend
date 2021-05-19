@@ -29,4 +29,9 @@ export default new class RequestController {
     const status = await this.requestService.delete(req.user, req.params.id);
     return res.send(status);
   }
+
+  async sendRequest(req, res) {
+    const request = await this.requestService.sendRequest(req.params.id, req.body);
+    return res.send(request);
+  }
 }();

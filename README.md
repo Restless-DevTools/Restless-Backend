@@ -1,4 +1,4 @@
-![Restless Logo](https://raw.githubusercontent.com/Restless-DevTools/Restless-Backend/master/docs/images/restless-logo.png)
+![Restless Logo](/docs/images/restless-logo.png)
 
 Restless is a platform that aims to help developers in their daily lives. It is possible to manage, store, execute and share HTTP and HTTP requests. It is also possible to create teams, Snippets and Jobs. 
 

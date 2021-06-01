@@ -45,7 +45,7 @@ export default class SnippetRepository {
         userId,
       },
     });
-    return this.getSnippet(paramsId);
+    return this.getSnippet(userId, paramsId);
   }
 
   getSnippet(userId, paramsId) {

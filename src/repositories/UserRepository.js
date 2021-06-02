@@ -93,13 +93,18 @@ export default class UserRepository {
   }
 
   checkDuplicity(user) {
+    const where = {};
+
+    if (user.username) {
+      where.username = user.username;
+    }
+
+    if (user.email) {
+      where.email = user.email;
+    }
+
     return this.db.count({
-      where: {
-        [this.Op.or]: {
-          username: user.username,
-          email: user.email,
-        },
-      },
+      where,
     });
   }
 }

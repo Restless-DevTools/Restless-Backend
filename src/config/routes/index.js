@@ -6,6 +6,7 @@ import UsersRoutes from './UsersRoutes';
 import CollectionsRoutes from './CollectionsRoutes';
 import SnippetsRoutes from './SnippetsRoutes';
 import RequestsRoutes from './RequestsRoutes';
+import ResponsesRoutes from './ResponsesRoutes';
 
 const router = express();
 
@@ -29,5 +30,8 @@ router.route(SnippetsRoutes(router));
 
 // request routes
 router.route(RequestsRoutes(router));
+
+// response routes
+router.route(ResponsesRoutes(router));
 
 export default router;

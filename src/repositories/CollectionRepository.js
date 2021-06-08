@@ -21,6 +21,7 @@ export default class CollectionRepository {
       permissionType: collection.permissionType,
       description: collection.description,
       userId: collection.userId,
+      teamId: collection.teamId,
     });
     return createdCollection;
   }
@@ -31,6 +32,7 @@ export default class CollectionRepository {
       permissionType: collection.permissionType,
       description: collection.description,
       userId: collection.userId,
+      teamId: collection.teamId,
     }, {
       where: {
         id: paramsId,

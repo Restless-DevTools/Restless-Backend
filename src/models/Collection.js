@@ -15,5 +15,7 @@ export default class Collection extends Model {
   static associate(models) {
     this.userAssociation = models.Collection.belongsTo(models.User,
       { foreignKey: 'userId' });
+    this.teamAssociation = models.Collection.belongsTo(models.Team,
+      { foreignKey: 'teamId' });
   }
 }

@@ -20,6 +20,7 @@ function SnippetValidator(req, res, next) {
     description: Joi.string().required(),
     language: Joi.string().required().valid(languages),
     shareOption: Joi.string().required().valid(['PUBLIC', 'PRIVATE', 'TEAM', 'USER']),
+    teamId: Joi.number(),
   });
   const result = Joi.validate(req.body, schema);
   if (result.error === null) {

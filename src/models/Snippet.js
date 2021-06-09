@@ -15,9 +15,9 @@ export default class Snippet extends Model {
   }
 
   static associate(models) {
-    this.userAssociation = models.Snippet.belongsTo(models.Request,
+    this.userAssociation = models.Snippet.belongsTo(models.User,
       { foreignKey: 'userId' });
-    this.teamAssociation = models.Snippet.belongsTo(models.Request,
+    this.teamAssociation = models.Snippet.belongsTo(models.Team,
       { foreignKey: 'teamId' });
     this.groupAssociation = models.Snippet.belongsTo(models.Group,
       { foreignKey: 'groupId' });

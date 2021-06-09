@@ -1,4 +1,5 @@
 import models from '../models';
+import Logger from '../helpers/Logger';
 
 export default class CollectionRepository {
   constructor() {
@@ -7,10 +8,34 @@ export default class CollectionRepository {
     this.Op = models.Sequelize.Op;
   }
 
-  getAllCollections(user) {
+  async getAllCollections(userId) {
+    try {
+      const query = [];
+      const replacements = {
+        userId,
+      };
+
+      query.push('SELECT c.id, c.name, c.permission_type "permissionType", c.created_at "createdAt",');
+      query.push('c.updated_at "updatedAt", c.description, c.user_id "userId"');
+      query.push('FROM collection c');
+      query.push('WHERE c.user_id = :userId OR c.team_id in (select team_id from user_team where user_id = :userId)');
+
+      const result = await this.sequelize.query(query.join(' '),
+        {
+          replacements,
+          type: this.sequelize.QueryTypes.SELECT,
+        });
+      return result;
+    } catch (error) {
+      Logger.printError(error);
+      return [];
+    }
+  }
+
+  getAllPublicCollections() {
     return this.db.findAll({
       where: {
-        userId: user.id,
+        permissionType: 'PUBLIC',
       },
     });
   }
@@ -21,6 +46,7 @@ export default class CollectionRepository {
       permissionType: collection.permissionType,
       description: collection.description,
       userId: collection.userId,
+      teamId: collection.teamId,
     });
     return createdCollection;
   }
@@ -31,6 +57,7 @@ export default class CollectionRepository {
       permissionType: collection.permissionType,
       description: collection.description,
       userId: collection.userId,
+      teamId: collection.teamId,
     }, {
       where: {
         id: paramsId,

@@ -62,9 +62,9 @@ export default class RequestService {
     return this.requestRepository.edit(user.id, paramsId, request);
   }
 
-  async getRequest({ user }, id) {
+  async getRequest(id) {
     try {
-      const { dataValues } = await this.requestRepository.getRequest(user.id, id);
+      const { dataValues } = await this.requestRepository.getRequest(id);
 
       const [requestBody, requestHeader, requestQuery] = await Promise.all([
         this.requestBodyRepository.getByRequestId(id),
@@ -186,7 +186,7 @@ export default class RequestService {
 
   async sendRequest(user, requestId, request) {
     try {
-      const storedRequest = await this.getRequest(user, requestId);
+      const storedRequest = await this.getRequest(requestId);
       if (storedRequest) {
         if (request.requestBody) {
           await this.requestBodyRepository.deleteByRequestId(requestId);
@@ -200,7 +200,7 @@ export default class RequestService {
         }
 
         await this.edit(user, requestId, request);
-        const completeRequest = await this.getRequest(user, requestId);
+        const completeRequest = await this.getRequest(requestId);
 
         return this.executeRequest(completeRequest, request.startTime);
       }

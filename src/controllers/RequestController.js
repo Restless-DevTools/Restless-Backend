@@ -20,9 +20,9 @@ export default new class RequestController {
     return res.send(model);
   }
 
-  getRequest(req, res) {
-    return this.requestService.getRequest(req.user, req.params.id)
-      .then((snippet) => res.send(snippet));
+  async getRequest(req, res) {
+    const snippet = await this.requestService.getRequest(req.params.id);
+    return res.send(snippet);
   }
 
   async delete(req, res) {

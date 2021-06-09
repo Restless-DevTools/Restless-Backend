@@ -10,6 +10,11 @@ export default new class CollectionController {
       .then((collections) => res.send(collections));
   }
 
+  getAllPublicCollections(req, res) {
+    return this.collectionService.getAllPublicCollections()
+      .then((collections) => res.send(collections));
+  }
+
   async create(req, res) {
     const model = await this.collectionService.create(req.user, req.body);
     return res.send(model);

@@ -3,6 +3,7 @@ import CollectionValidator from '../../middlewares/CollectionValidator';
 
 export default async function CollectionsRoutes(router) {
   router.get('/collections/all', (req, res) => CollectionController.getAllCollections(req, res));
+  router.get('/collections/public', (req, res) => CollectionController.getAllPublicCollections(req, res));
   router.post('/collections/create',
     (req, res, next) => CollectionValidator.CollectionValidator(req, res, next),
     (req, res) => CollectionController.create(req, res));

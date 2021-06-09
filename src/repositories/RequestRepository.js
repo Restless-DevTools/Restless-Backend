@@ -46,11 +46,10 @@ export default class RequestRepository {
     return this.getRequest(userId, paramsId);
   }
 
-  getRequest(userId, paramsId) {
+  getRequest(paramsId) {
     return this.db.findOne({
       where: {
         id: paramsId,
-        userId,
       },
     });
   }

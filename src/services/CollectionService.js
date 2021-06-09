@@ -7,9 +7,14 @@ export default class CollectionService {
     this.userService = new UserService();
   }
 
-  getAllCollections({ user }) {
+  async getAllCollections({ user }) {
     try {
-      return this.collectionRepository.getAllCollections({ id: user.id });
+      const collectionsQuery = await this.collectionRepository.getAllCollections(user.id);
+      const collections = collectionsQuery.map((collection) => (
+        { ...collection, shared: +collection.userId !== +user.id }
+      ));
+
+      return collections;
     } catch (error) {
       return { message: error.message, status: false };
     }

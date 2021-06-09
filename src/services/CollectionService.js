@@ -15,6 +15,14 @@ export default class CollectionService {
     }
   }
 
+  getAllPublicCollections() {
+    try {
+      return this.collectionRepository.getAllPublicCollections();
+    } catch (error) {
+      return { message: error.message, status: false };
+    }
+  }
+
   create({ user }, collection) {
     try {
       return this.collectionRepository.create({ ...collection, userId: user.id });

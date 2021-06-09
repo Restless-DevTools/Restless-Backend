@@ -15,6 +15,14 @@ export default class CollectionRepository {
     });
   }
 
+  getAllPublicCollections() {
+    return this.db.findAll({
+      where: {
+        permissionType: 'PUBLIC',
+      },
+    });
+  }
+
   async create(collection) {
     const createdCollection = await this.db.create({
       name: collection.name,

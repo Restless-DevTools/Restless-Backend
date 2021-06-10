@@ -12,6 +12,8 @@ export default class Response extends Model {
         allTransactionTime: { type: DataTypes.INTEGER }, // miliseconds
         requestTime: { type: DataTypes.INTEGER }, // miliseconds
         headers: { type: DataTypes.JSONB },
+        link: { type: DataTypes.STRING },
+        method: { type: DataTypes.STRING },
       },
       { tableName: 'response', sequelize, underscored: true },
     );

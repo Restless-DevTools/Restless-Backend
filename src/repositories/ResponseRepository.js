@@ -18,6 +18,8 @@ export default class ResponseRepository {
       allTransactionTime: response.allTransactionTime,
       requestTime: response.requestTime,
       headers: response.headers,
+      link: response.link,
+      method: response.method,
     });
     return createdresponse;
   }
@@ -32,6 +34,8 @@ export default class ResponseRepository {
       size: response.size, // bytes
       allTransactionTime: response.allTransactionTime,
       requestTime: response.requestTime,
+      link: response.link,
+      method: response.method,
     }, {
       where: {
         id: paramsId,

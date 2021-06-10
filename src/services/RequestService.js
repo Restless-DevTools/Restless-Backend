@@ -102,6 +102,8 @@ export default class RequestService {
         size: 0,
         allTransactionTime: differenceInMilliseconds(times.executeEndTime, times.startTime),
         requestTime: differenceInMilliseconds(times.executeEndTime, times.executeStartTime),
+        link: request.link,
+        method: request.method,
       };
 
       if (error) {

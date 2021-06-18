@@ -54,7 +54,13 @@ async function authorizeRequest(req, res, next) {
     '/users/create',
   ];
 
-  if (allowedRoutes.includes(req.url) || process.env.NODE_ENV === 'test') {
+  if (allowedRoutes.includes(req.url)) {
+    next();
+    return;
+  }
+
+  if (process.env.NODE_ENV === 'test') {
+    req.user = { user: { username: 'Test', id: req.headers['x-test-user'] } };
     next();
     return;
   }

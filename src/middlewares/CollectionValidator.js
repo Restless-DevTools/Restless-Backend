@@ -3,9 +3,10 @@ import Joi from 'joi';
 function CollectionValidator(req, res, next) {
   const schema = Joi.object().keys({
     name: Joi.string().required(),
-    permissionType: Joi.string().required().valid(['PUBLIC', 'PRIVATE', 'TEAM']),
+    shareOption: Joi.string().required().valid(['PUBLIC', 'PRIVATE', 'TEAM']),
     description: Joi.string().allow('', null),
     teamId: Joi.number(),
+    sharedPermissions: Joi.string().required().valid(['READ', 'WRITE', 'DELETE']),
   });
   const result = Joi.validate(req.body, schema);
   if (result.error === null) {

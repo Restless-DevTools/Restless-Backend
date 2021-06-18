@@ -10,7 +10,21 @@ describe('Testing users CRUD operations', () => {
   const name = 'Restless test';
   const username = 'usersTest';
   const email = 'usersTest@restlessdevtools.com';
-  let userId;
+  let defaultUser;
+  let userToBeDeleted;
+
+  it('should create a User', async () => {
+    const response = await request(app)
+      .post('/users/create')
+      .send({
+        name,
+        username: 'Test User',
+        email,
+        password: 'batma123',
+      });
+    defaultUser = response.body.id;
+    expect(response.status).toBe(200);
+  });
 
   it('should create a User', async () => {
     const response = await request(app)
@@ -22,13 +36,13 @@ describe('Testing users CRUD operations', () => {
         password: 'batma123',
       });
 
-    userId = response.body.id;
+    userToBeDeleted = response.body.id;
     expect(response.status).toBe(200);
   });
 
   it('should return a single User', async () => {
     const response = await request(app)
-      .get(`/users/show/${userId}`)
+      .get(`/users/show/${defaultUser}`)
       .send();
 
     expect(response.body.name).toBe(name);
@@ -44,7 +58,7 @@ describe('Testing users CRUD operations', () => {
 
   it('should update a User', async () => {
     const response = await request(app)
-      .put(`/users/update/${userId}`)
+      .put(`/users/update/${defaultUser}`)
       .send({
         name: 'Restless test 2',
       });
@@ -54,7 +68,7 @@ describe('Testing users CRUD operations', () => {
 
   it('should delete a User', async () => {
     const response = await request(app)
-      .delete(`/users/delete/${userId}`)
+      .delete(`/users/delete/${userToBeDeleted}`)
       .send();
 
     expect(response.status).toBe(200);

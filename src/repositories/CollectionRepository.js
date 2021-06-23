@@ -32,12 +32,35 @@ export default class CollectionRepository {
     }
   }
 
-  getAllPublicCollections() {
-    return this.db.findAll({
-      where: {
-        permissionType: 'PUBLIC',
-      },
-    });
+  async getPublicCollections(filters) {
+    const query = [];
+    const replacements = {
+      permissionTypes: ['PUBLIC'],
+    };
+
+    query.push('SELECT c.id, c.name, c.permission_type "permissionType", c.created_at "createdAt",');
+    query.push('c.updated_at "updatedAt", c.description, c.user_id "userId"');
+    query.push('FROM collection c');
+    query.push('WHERE c.permission_type in (:permissionTypes)');
+
+    query.push('LIMIT :limit OFFSET :offset');
+    replacements.limit = filters.limit;
+    replacements.offset = filters.offset;
+
+    try {
+      const collections = await this.sequelize.query(query.join(' '), {
+        replacements,
+        type: this.sequelize.QueryTypes.SELECT,
+      });
+
+      return {
+        offset: filters.offset,
+        limit: filters.limit,
+        rows: collections,
+      };
+    } catch (error) {
+      return { error: 'ERROR_ON_SEARCH_COLLECTIONS' };
+    }
   }
 
   async create(collection) {

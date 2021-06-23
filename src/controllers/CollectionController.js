@@ -10,8 +10,13 @@ export default new class CollectionController {
       .then((collections) => res.send(collections));
   }
 
-  getAllPublicCollections(req, res) {
-    return this.collectionService.getAllPublicCollections()
+  getPublicCollections(req, res) {
+    const filters = {
+      offset: req.query.offset,
+      amount: req.query.amount,
+    };
+
+    return this.collectionService.getPublicCollections(filters)
       .then((collections) => res.send(collections));
   }
 

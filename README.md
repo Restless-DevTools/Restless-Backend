@@ -2,7 +2,7 @@
 
 Restless is a platform that aims to help developers in their daily lives. It is possible to manage, store, execute and share HTTP and HTTP requests. It is also possible to create teams, Snippets and Jobs. 
 
-You will find us [here](https://restlessdevtools.com). Not yet, but soon!
+You will find us [here](https://restlessdevtools.com).
 
 # About
 We are <b>restless</b>, we are always ahead of new technologies, building the world as it is. The great masses do not always remember us, or realize that we exist. For every post on a social network, for every like or every message sent, there was a massive work from someone like you who is reading this right now.

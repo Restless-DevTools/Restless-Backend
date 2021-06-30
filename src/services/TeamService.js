@@ -25,15 +25,15 @@ export default class TeamService {
     try {
       const teamCreated = await this.teamRepository.create(team);
       if (team.integrants && team.integrants.length) {
-        team.integrants.forEach((integrant) => {
+        await Promise.all(team.integrants.map((integrant) => {
           const role = (user.id === integrant.userId) ? 'admin' : undefined;
 
-          this.userTeamRepository.create({
+          return this.userTeamRepository.create({
             teamId: teamCreated.id,
             userId: integrant.userId,
             role,
           });
-        });
+        }));
       }
 
       return teamCreated;

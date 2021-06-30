@@ -18,8 +18,8 @@ export default class SnippetRepository {
       query.push('SELECT s.id, s.name, s.description, s.language, s.share_option "shareOption", s.created_at "createdAt",');
       query.push('s.user_id "userId", s.team_id "teamId"');
       query.push('FROM snippet s');
-      query.push('WHERE s.user_id = :userId');
-      query.push('OR s.team_id in (select team_id from user_team where user_id = :userId)');
+      query.push('WHERE (s.user_id = :userId');
+      query.push('OR s.team_id in (select team_id from user_team where user_id = :userId))');
 
       const result = await this.sequelize.query(query.join(' '),
         {
@@ -66,13 +66,31 @@ export default class SnippetRepository {
     return this.getSnippet(userId, paramsId);
   }
 
-  getSnippet(userId, paramsId) {
-    return this.db.findOne({
-      where: {
-        id: paramsId,
+  async getSnippet(userId, paramsId) {
+    try {
+      const query = [];
+      const replacements = {
         userId,
-      },
-    });
+        paramsId,
+      };
+
+      query.push('SELECT s.id, s.name, s.description, s.language, s.share_option "shareOption", s.created_at "createdAt",');
+      query.push('s.user_id "userId", s.team_id "teamId", s.code');
+      query.push('FROM snippet s');
+      query.push('WHERE s.id = :paramsId');
+      query.push('AND (s.user_id = :userId OR s.team_id in (select team_id from user_team where user_id = :userId))');
+      query.push('LIMIT 1');
+
+      const [result] = await this.sequelize.query(query.join(' '),
+        {
+          replacements,
+          type: this.sequelize.QueryTypes.SELECT,
+        });
+      return result;
+    } catch (error) {
+      Logger.printError(error);
+      return [];
+    }
   }
 
   delete(userId, paramsId) {

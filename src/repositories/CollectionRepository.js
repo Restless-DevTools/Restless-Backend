@@ -48,12 +48,16 @@ export default class CollectionRepository {
     replacements.offset = filters.offset;
 
     try {
-      const collections = await this.sequelize.query(query.join(' '), {
-        replacements,
-        type: this.sequelize.QueryTypes.SELECT,
-      });
+      const collectionsQuery = () => this.sequelize.query(query.join(' '),
+        {
+          replacements,
+          type: this.sequelize.QueryTypes.SELECT,
+        });
+      const countQuery = () => this.getCount(query.join(' '), replacements);
+      const [collections, count] = await Promise.all([collectionsQuery(), countQuery()]);
 
       return {
+        count,
         offset: filters.offset,
         limit: filters.limit,
         rows: collections,
@@ -61,6 +65,22 @@ export default class CollectionRepository {
     } catch (error) {
       return { error: 'ERROR_ON_SEARCH_COLLECTIONS' };
     }
+  }
+
+  async getCount(queryParam, valuesParam) {
+    const values = { ...valuesParam };
+    let onlyConditional = queryParam.match(/(FROM.*)/)[1];
+
+    if (onlyConditional.includes('LIMIT')) {
+      [onlyConditional] = onlyConditional.match(/(.*(?=LIMIT))/);
+    }
+    const query = `SELECT cast(COUNT(*) as INT) ${onlyConditional} `;
+    const result = await this.sequelize.query(query,
+      {
+        replacements: values,
+        type: this.sequelize.QueryTypes.SELECT,
+      });
+    return result[0].count;
   }
 
   async create(collection) {

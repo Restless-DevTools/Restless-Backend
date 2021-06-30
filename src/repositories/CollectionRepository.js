@@ -59,7 +59,6 @@ export default class CollectionRepository {
         rows: collections,
       };
     } catch (error) {
-      console.log(error);
       return { error: 'ERROR_ON_SEARCH_COLLECTIONS' };
     }
   }

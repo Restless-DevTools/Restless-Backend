@@ -35,13 +35,13 @@ export default class CollectionRepository {
   async getPublicCollections(filters) {
     const query = [];
     const replacements = {
-      permissionTypes: ['PUBLIC'],
+      shareOption: ['PUBLIC'],
     };
 
-    query.push('SELECT c.id, c.name, c.permission_type "permissionType", c.created_at "createdAt",');
+    query.push('SELECT c.id, c.name, c.share_option "shareOption", c.created_at "createdAt",');
     query.push('c.updated_at "updatedAt", c.description, c.user_id "userId"');
     query.push('FROM collection c');
-    query.push('WHERE c.permission_type in (:permissionTypes)');
+    query.push('WHERE c.share_option in (:shareOption)');
 
     query.push('LIMIT :limit OFFSET :offset');
     replacements.limit = filters.limit;

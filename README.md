@@ -15,6 +15,15 @@ This project knows the importance of each developer around the world and it is f
 
 Made by developers, for developers. 
 
+# Some images
+![Restless Dashboard](/docs/Collections.png)
+
+![Restless Request](/docs/Requests.png)
+
+![Restless Response](/docs/Response.png)
+
+![Restless Snippets](/docs/snippets.png)
+
 # Self hosted
 You can host Restless on your own server, free of charge. Thus, small startups, beginning developers and students will be able to use credits from infrastructure platforms and use it for free. Large and medium-sized companies that have their own hardware and if it is more feasible to host it on their own, will also be exempt from monthly fees. 
 

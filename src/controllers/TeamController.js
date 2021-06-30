@@ -5,9 +5,9 @@ export default new class TeamController {
     this.teamService = new TeamService();
   }
 
-  getAllTeams(req, res) {
-    return this.teamService.getAllTeams(req.user)
-      .then((teams) => res.send(teams));
+  async getAllTeams(req, res) {
+    const teams = await this.teamService.getAllTeams(req.user);
+    return res.send(teams);
   }
 
   async create(req, res) {
@@ -20,9 +20,9 @@ export default new class TeamController {
     return res.send(model);
   }
 
-  getTeam(req, res) {
-    return this.teamService.getTeam(req.params.id)
-      .then((team) => res.send(team));
+  async getTeam(req, res) {
+    const team = await this.teamService.getTeam(req.params.id);
+    return res.send(team);
   }
 
   async delete(req, res) {

@@ -5,8 +5,9 @@ export default class Collection extends Model {
     return super.init(
       {
         name: { type: DataTypes.STRING },
-        permissionType: { type: DataTypes.STRING },
+        shareOption: { type: DataTypes.STRING },
         description: { type: DataTypes.STRING },
+        sharedPermissions: { type: DataTypes.STRING },
       },
       { tableName: 'collection', sequelize, underscored: true },
     );

@@ -129,18 +129,20 @@ export default class AuthService {
             .edit(userConfirmationStored.id, { verificationCode, validated: false });
         }
 
-        let html = await this.fsHelper.readFile('./src/layouts/recover-password.html', 'utf8');
-        html = html.replace('{username}', userStored.username);
-        html = html.replace('{verificationCode}', verificationCode);
+        if (process.env.SMTP_HOST) {
+          let html = await this.fsHelper.readFile('./src/layouts/recover-password.html', 'utf8');
+          html = html.replace('{username}', userStored.username);
+          html = html.replace('{verificationCode}', verificationCode);
 
-        const mail = {
-          email: userStored.email,
-          subject: 'Restless - Recover password',
-          body: html,
-          html: true,
-        };
+          const mail = {
+            email: userStored.email,
+            subject: 'Restless - Recover password',
+            body: html,
+            html: true,
+          };
 
-        this.emailHelper.createEmail(mail);
+          this.emailHelper.createEmail(mail);
+        }
       }
       return { message: 'If the user exists an email will be sended' };
     } catch (error) {
@@ -166,17 +168,19 @@ export default class AuthService {
           if (updatedUser) {
             this.userConfirmationService.edit(id, { validated: true });
 
-            let html = await this.fsHelper.readFile('./src/layouts/password-updated.html', 'utf8');
-            html = html.replace('{username}', userStored.username);
+            if (process.env.SMTP_HOST) {
+              let html = await this.fsHelper.readFile('./src/layouts/password-updated.html', 'utf8');
+              html = html.replace('{username}', userStored.username);
 
-            const mail = {
-              email: userStored.email,
-              subject: 'Restless - Password updated',
-              body: html,
-              html: true,
-            };
+              const mail = {
+                email: userStored.email,
+                subject: 'Restless - Password updated',
+                body: html,
+                html: true,
+              };
 
-            this.emailHelper.createEmail(mail);
+              this.emailHelper.createEmail(mail);
+            }
 
             return { status: true };
           }

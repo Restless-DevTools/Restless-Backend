@@ -44,9 +44,23 @@ export default class CollectionService {
     }
   }
 
-  edit({ user }, paramsId, collection) {
+  async edit({ user }, paramsId, collection) {
     try {
-      return this.collectionRepository.edit(user.id, paramsId, collection);
+      const collectionStored = await this.getCollection({ user }, paramsId);
+
+      if (!collectionStored) {
+        return { message: 'Collection not found', status: false };
+      }
+
+      if (user.id === collectionStored.userId) {
+        return this.collectionRepository.edit(user.id, paramsId, collection);
+      }
+
+      if (collectionStored.sharedPermissions === 'EDIT') {
+        return this.collectionRepository.edit(user.id, paramsId, collection);
+      }
+
+      return { message: 'User is not allowed to edit this collection.', status: false };
     } catch (error) {
       return { message: error.message, status: false };
     }

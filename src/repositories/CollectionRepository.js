@@ -15,8 +15,8 @@ export default class CollectionRepository {
         userId,
       };
 
-      query.push('SELECT c.id, c.name, c.permission_type "permissionType", c.created_at "createdAt",');
-      query.push('c.updated_at "updatedAt", c.description, c.user_id "userId"');
+      query.push('SELECT c.id, c.name, c.share_option "shareOption", c.created_at "createdAt",');
+      query.push('c.updated_at "updatedAt", c.description, c.user_id "userId", c.shared_permissions "sharedPermissions"');
       query.push('FROM collection c');
       query.push('WHERE c.user_id = :userId OR c.team_id in (select team_id from user_team where user_id = :userId)');
 
@@ -66,10 +66,11 @@ export default class CollectionRepository {
   async create(collection) {
     const createdCollection = await this.db.create({
       name: collection.name,
-      permissionType: collection.permissionType,
+      shareOption: collection.shareOption,
       description: collection.description,
       userId: collection.userId,
       teamId: collection.teamId,
+      sharedPermissions: collection.sharedPermissions,
     });
     return createdCollection;
   }
@@ -77,10 +78,11 @@ export default class CollectionRepository {
   async edit(userId, paramsId, collection) {
     await this.db.update({
       name: collection.name,
-      permissionType: collection.permissionType,
+      shareOption: collection.shareOption,
       description: collection.description,
       userId: collection.userId,
       teamId: collection.teamId,
+      sharedPermissions: collection.sharedPermissions,
     }, {
       where: {
         id: paramsId,

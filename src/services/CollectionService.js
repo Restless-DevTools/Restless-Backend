@@ -20,9 +20,17 @@ export default class CollectionService {
     }
   }
 
-  getAllPublicCollections() {
+  getPublicCollections(filtersParams) {
     try {
-      return this.collectionRepository.getAllPublicCollections();
+      const filters = { ...filtersParams };
+
+      if (!filters.offset) {
+        filters.offset = 0;
+      }
+
+      filters.limit = !filters.amount ? 10 : filters.amount;
+
+      return this.collectionRepository.getPublicCollections(filters);
     } catch (error) {
       return { message: error.message, status: false };
     }

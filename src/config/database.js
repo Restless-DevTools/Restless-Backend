@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+const format = require('date-fns/format');
 
 require('dotenv').config({
   path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',

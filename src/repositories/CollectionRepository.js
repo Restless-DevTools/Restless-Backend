@@ -16,7 +16,8 @@ export default class CollectionRepository {
       };
 
       query.push('SELECT c.id, c.name, c.share_option "shareOption", c.created_at "createdAt",');
-      query.push('c.updated_at "updatedAt", c.description, c.user_id "userId", c.shared_permissions "sharedPermissions"');
+      query.push('c.updated_at "updatedAt", c.description, c.user_id "userId", c.shared_permissions "sharedPermissions",');
+      query.push('c.team_id "teamId"');
       query.push('FROM collection c');
       query.push('WHERE c.user_id = :userId OR c.team_id in (select team_id from user_team where user_id = :userId)');
 

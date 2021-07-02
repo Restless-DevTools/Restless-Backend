@@ -5,7 +5,7 @@ function CollectionValidator(req, res, next) {
     name: Joi.string().required(),
     shareOption: Joi.string().required().valid(['PUBLIC', 'PRIVATE', 'TEAM']),
     description: Joi.string().allow('', null),
-    teamId: Joi.number(),
+    teamId: Joi.number().allow(null, ''),
     sharedPermissions: Joi.string().valid(['READ', 'WRITE', 'DELETE']),
   });
   const result = Joi.validate(req.body, schema);

@@ -52,7 +52,7 @@ export default class CollectionService {
         return { message: 'Collection not found', status: false };
       }
 
-      if (user.id === collectionStored.userId) {
+      if (+user.id === +collectionStored.userId) {
         return this.collectionRepository.edit(user.id, paramsId, collection);
       }
 

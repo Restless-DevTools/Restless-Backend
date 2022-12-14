@@ -23,7 +23,7 @@
     "cors": "^2.8.5",
     "date-fns": "^2.21.2",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "keygenerator": "^1.0.4",
